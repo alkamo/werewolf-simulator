@@ -16,27 +16,15 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.NotYetImplementedPlayer
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.SetupActive
+import ww.Utilities
 
-class VirginiaWoolf extends Player {
+class VirginiaWoolf extends Player implements SetupActive {
 
     VirginiaWoolf(Parameters parameters, List<? extends Player> players) {
-        super(Role.VIRGINIA_WOOLF, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-
+        super(parameters, players, -2)
     }
 
     @Override
@@ -45,7 +33,7 @@ class VirginiaWoolf extends Player {
             Player player ->
                 player != this
         }
-        Player afraid = potentialAfraid.get(new Random().nextInt(potentialAfraid.size()))
+        Player afraid = (Player) Utilities.pickRandomElement(potentialAfraid)
         afraid.deathLinks.add(this)
         this.deathLinks.add(afraid)
     }

@@ -17,7 +17,6 @@
 package ww
 
 abstract class Player {
-    Role role
     Boolean alive = true
     Identity identityOverride
     List<? extends Player> identityKnownBy = []
@@ -25,19 +24,37 @@ abstract class Player {
     Parameters parameters
     List<? extends Player> players
     List<? extends Player> deathLinks = []
-    Boolean cultist = false
     Team team
 
-    Player(Role role, Parameters parameters, List<Player> players, Team team) {
-        this.role = role;
+    Identity identity = Identity.VILLAGER;
+    Integer weight = 1;
+    Boolean preventsVillageWin = false;
+    TeamType teamType = TeamType.VILLAGE;
+
+    Player(Parameters parameters, List<Player> players, TeamType teamType, Identity identity, Integer weight, Boolean preventsVillageWin) {
+        this.teamType = teamType
         this.parameters = parameters;
         this.players = players;
-        this.team = team;
+        this.identity = identity;
+        this.weight = weight;
+        this.preventsVillageWin = preventsVillageWin;
+    }
+
+    Player(Parameters parameters, List<Player> players, Integer weight) {
+        this.teamType = teamType
+        this.parameters = parameters;
+        this.players = players;
+        this.identity = identity;
+        this.weight = weight;
+        this.preventsVillageWin = preventsVillageWin;
     }
 
     void kill(Game.TurnType turnType) {
         this.alive = false
-        this.onDeath(turnType);
+        if (this instanceof DeathActive) {
+            DeathActive deathPlayer = (DeathActive) this
+            deathPlayer.onDeath(turnType)
+        }
         if (!alive) {
             deathLinks.each { Player player ->
                 player.kill(turnType)
@@ -46,17 +63,11 @@ abstract class Player {
     }
 
     Identity getIdentity() {
-        return identityOverride ?: role.identity
+        return identityOverride ?: identity
     }
 
-    abstract void nightAction(NightState nightState)
-
-    abstract void onDeath(Game.TurnType turnType)
-
-    abstract void onGameSetup()
-
     void shareKnowledge() {
-        identityKnownBy.each{Player player ->
+        identityKnownBy.each { Player player ->
             if (player.team.teamType != TeamType.SOLO && !identityKnownByTeam.contains(player.team)) {
                 identityKnownByTeam.add(player.team)
             }

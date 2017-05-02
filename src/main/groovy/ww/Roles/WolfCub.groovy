@@ -16,14 +16,16 @@
 
 package ww.Roles
 
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class WolfCub extends Werewolf {
+class WolfCub extends NotYetImplementedPlayer implements DeathActive {
 
     WolfCub(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players)
-        this.role = Role.WOLF_CUB
+        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -8, true)
+    }
+
+    @Override
+    void onDeath(Game.TurnType turnType) {
+
     }
 }

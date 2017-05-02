@@ -16,16 +16,13 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class Seer extends Player {
+class Seer extends Player implements NightActive, DeathActive {
 
     Seer(Parameters parameters, List<? extends Player> players) {
-        super(Role.SEER, parameters, players)
+        super(parameters, players, 7)
+        identityKnownBy.add(this)
     }
 
     @Override
@@ -36,27 +33,27 @@ class Seer extends Player {
                     Player player ->
                         alive && !identityKnownBy.contains(this) && player != this
                 }
-                potentialLooks.get(new Random().nextInt(potentialLooks.size())).identityKnownBy.add(this)
+                Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
                 break;
             default:
                 throw new Exception('Not yet implemeted')
         }
     }
 
-
     @Override
-    void onDeath(Game.TurnType turnType) {
-        List<? extends Player> appSeers = players.findAll {Player player ->
-            (player.role == Role.APPRENTICE_SEER
-            && !player.active)}
-        if (appSeers.size() != 0) {
-            ApprenticeSeer promotedSeer = (ApprenticeSeer) appSeers.get(new Random().nextInt(appSeers.size()))
-            promotedSeer.active = true
-        }
+    Integer getNightOrder() {
+        return 3
     }
 
     @Override
-    void onGameSetup() {
-
+    void onDeath(Game.TurnType turnType) {
+        List<? extends Player> appSeers = players.findAll { Player player ->
+            (player.role instanceof ApprenticeSeer
+                    && !player.active)
+        }
+        if (appSeers.size() != 0) {
+            ApprenticeSeer promotedSeer = (ApprenticeSeer) Utilities.pickRandomElement(appSeers)
+            promotedSeer.active = true
+        }
     }
 }

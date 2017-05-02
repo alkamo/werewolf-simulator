@@ -16,14 +16,29 @@
 
 package ww.Roles
 
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
+import ww.Teams.Solo
 
-class Blob extends NotYetImplementedPlayer {
+class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition {
+
+    List<? extends Player> blob
 
     Blob(Parameters parameters, List<? extends Player> players) {
-        super(Role.BLOB, parameters, players)
+        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, -1, true)
+    }
+
+    @Override
+    void nightAction(NightState nightState) {
+
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 1
+    }
+
+    @Override
+    Boolean checkForWin() {
+        return players.findAll { alive }.size() == blob.findAll { alive }.size()
     }
 }

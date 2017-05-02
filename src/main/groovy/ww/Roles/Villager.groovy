@@ -16,14 +16,14 @@
 
 package ww.Roles
 
-import ww.ActionlessPlayer
+import ww.Identity
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.Teams.Village
 
-class Villager extends ActionlessPlayer {
+class Villager extends Player {
 
     Villager(Parameters parameters, List<? extends Player> players) {
-        super(Role.VILLAGER, parameters, players)
+        super(parameters, players, 1)
     }
 }

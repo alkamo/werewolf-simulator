@@ -17,8 +17,10 @@
 package ww.Teams
 
 import ww.*
+import ww.Roles.ApprenticeSeer
+import ww.Roles.Seer
 
-class Werewolves extends Team {
+class Werewolves extends Team implements WinCondition, NightActive{
     Werewolves(Parameters parameters, List<? extends Player> players) {
         super(TeamType.WEREWOLF, parameters, players)
     }
@@ -28,7 +30,7 @@ class Werewolves extends Team {
         List<? extends Player> potentialKills = players.findAll {
             Player player ->
                 (player.alive
-                        && (player.role == Role.SEER || (player.role == Role.APPRENTICE_SEER && player.active))
+                        && (player instanceof Seer || (player instanceof ApprenticeSeer && player.active))
                         && player.identityKnownByTeam.contains(this))
         }
         if (potentialKills.size() == 0) {
@@ -39,22 +41,22 @@ class Werewolves extends Team {
         }
         nightState.playersToBeKilled.add(
                 new KillChoice(
-                        playerToBeKilled: potentialKills.get(new Random().nextInt(potentialKills.size())),
+                        playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
                         killedByTeam: this))
     }
 
     @Override
-    void onGameSetup() {
+    Integer getNightOrder() {
+        return 1
     }
 
     @Override
     Boolean checkForWin() {
         Boolean won = false
         if (parameters.endGameAtParity) {
-            won = (players.findAll { it.role.teamType != this.teamType && it.alive }.size() ==
-                    players.findAll { it.role.teamType == this.teamType && it.alive }.size())
+            won = (getLivePlayersOnTeam().size() == getLivePlayersNotOnTeam().size())
         } else {
-            won = (players.findAll { it.role.teamType != this.teamType && it.alive }.size() == 0)
+            won = (getLivePlayersNotOnTeam().size() == 0)
         }
 
         return won

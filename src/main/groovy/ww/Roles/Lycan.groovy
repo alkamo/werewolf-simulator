@@ -16,15 +16,14 @@
 
 package ww.Roles
 
-import ww.ActionlessPlayer
+import ww.Identity
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.TeamType
 
-//Complete
-class Lycan extends ActionlessPlayer {
+class Lycan extends Player {
 
     Lycan(Parameters parameters, List<? extends Player> players) {
-        super(Role.LYCAN, parameters, players)
+        super(parameters, players, TeamType.VILLAGE, Identity.WEREWOLF, -1, false)
     }
 }

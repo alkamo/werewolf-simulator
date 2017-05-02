@@ -19,21 +19,24 @@ package ww.Roles
 import ww.NightState
 import ww.Parameters
 import ww.Player
-import ww.Role
 
-//Complete
 class ApprenticeSeer extends Seer {
     Boolean active = false
 
     ApprenticeSeer(Parameters parameters, List<? extends Player> players) {
         super(parameters, players)
-        this.role = Role.APPRENTICE_SEER
+        weight = 4
     }
 
     @Override
     void nightAction(NightState nightState) {
         if (active) {
-            super.nightAction(blarg)
+            super.nightAction(nightState)
         }
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 4
     }
 }

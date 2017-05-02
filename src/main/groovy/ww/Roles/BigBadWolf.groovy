@@ -16,14 +16,11 @@
 
 package ww.Roles
 
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
 class BigBadWolf extends NotYetImplementedPlayer {
 
     BigBadWolf(Parameters parameters, List<? extends Player> players) {
-        super(Role.BIG_BAD_WOLF, parameters, players)
+        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -9, true)
     }
 }

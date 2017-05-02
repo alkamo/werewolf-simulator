@@ -32,29 +32,70 @@ class Game {
 
     Game(Parameters parameters) {
         this.parameters = parameters
+        setupPlayers()
+        setupActions()
+    }
+
+    void setupPlayers(){
         parameters.roles.each() { Role role, Integer quantity ->
-            if (!teams.containsKey(role.teamType)){
-                Constructor<? extends Team> teamConstructor = role.teamType.teamClass.getConstructor();
-                teams[role.teamType] = teamConstructor.newInstance()
-            }
             quantity.times {
                 Constructor<? extends Player> playerConstructor = role.roleClass.getConstructor();
-                players.add(playerConstructor.newInstance(parameters, players, teams[role.teamType]))
+                Player newPlayer = playerConstructor.newInstance(parameters, players)
+                players.add(newPlayer)
+                if (!teams.containsKey(newPlayer.teamType)) {
+                    Constructor<? extends Team> teamConstructor = newPlayer.teamType.teamClass.getConstructor();
+                    teams[newPlayer.teamType] = teamConstructor.newInstance()
+                }
+                newPlayer.team = teams[newPlayer.teamType]
             }
         }
         Collections.shuffle(players)
     }
 
-    void Day() {
-        lynch()
+    void setupActions() {
+        List<? extends SetupActive> setupActors = []
+        setupActors.addAll((List<? extends SetupActive>) players
+                .findAll { it.alive && it instanceof SetupActive })
+        setupActors.addAll((List<? extends SetupActive>) teams
+                .findAll { it instanceof SetupActive })
+        setupActors.each { player ->
+            player.onGameSetup()
+        }
     }
 
-    void Night() {
-        NightState nightState = new NightState()
-        List<? extends Player> nightActors = players
-                .findAll{it.alive && null != it.role.nightActionOrder}
-                .sort{it.role.nightActionOrder}
-        nightActors.each{player ->
+    void play() {
+        Integer cycleNumber = 1
+        while (!hasSomeoneWon()) {
+            day(cycleNumber)
+            if (!hasSomeoneWon()) {
+                night(cycleNumber)
+            }
+            cycleNumber += 1
+        }
+    }
+
+    void day(Integer dayNumber) {
+        DayState dayState = new DayState(dayNumber)
+        lynch(dayState)
+        List<? extends DayActive> dayActors = []
+        dayActors.addAll((List<? extends DayActive>) players
+                .findAll { it.alive && it instanceof NightActive })
+        dayActors.addAll((List<? extends DayActive>) teams
+                .findAll { it instanceof DayActive })
+        dayActors.each { player ->
+            player.dayAction(dayState)
+        }
+        shareKnowledge()
+    }
+
+    void night(Integer nightNumber) {
+        NightState nightState = new NightState(nightNumber)
+        List<? extends NightActive> nightActors = []
+        nightActors.addAll((List<? extends NightActive>) players
+                .findAll { it.alive && it instanceof NightActive })
+        nightActors.addAll((List<? extends NightActive>) teams
+                .findAll { it instanceof NightActive })
+        nightActors.each { player ->
             player.nightAction(nightState)
         }
         shareKnowledge()
@@ -62,16 +103,18 @@ class Game {
 
     void shareKnowledge() {
         List<? extends Player> livePlayers = players
-                .findAll{it.alive && it.identityKnownBy.size() != 0}
-        livePlayers.each {player ->
+                .findAll { it.alive && it.identityKnownBy.size() != 0 }
+        livePlayers.each { player ->
             player.shareKnowledge()
         }
-        teams.each {teamType, team ->
+        teams.each { teamType, team ->
             team.shareKnowledge()
         }
     }
 
-    void lynch() {
-
+    Boolean hasSomeoneWon() {
+        Boolean teamWon = teams.findAll { it instanceof WinCondition && it.checkForWinCondition } > 0
+        Boolean playerWon = teams.findAll { it instanceof WinCondition && it.checkForWinCondition } > 0
+        return teamWon || playerWon
     }
 }

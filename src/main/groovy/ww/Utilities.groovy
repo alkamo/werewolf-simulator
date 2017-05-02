@@ -16,22 +16,15 @@
 
 package ww
 
-abstract class ActionlessPlayer extends Player {
 
-    ActionlessPlayer(Role role, Parameters parameters, List<Player> players) {
-        super(role, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-    }
-
-    @Override
-    void onGameSetup() {
+class Utilities {
+    static final def pickRandomElement(List<?> listToPick) {
+        Integer pick
+        if (listToPick.size() > 1) {
+            pick = new Random().nextInt(listToPick.size())
+        } else {
+            pick = 0
+        }
+        return listToPick.get(pick)
     }
 }

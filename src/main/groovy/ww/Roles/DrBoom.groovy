@@ -16,31 +16,16 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class DrBoom extends Player {
+class DrBoom extends NotYetImplementedPlayer implements DeathActive {
 
     DrBoom(Parameters parameters, List<? extends Player> players) {
-        super(Role.DR_BOOM, parameters, players)
+        super(parameters, players, -2)
     }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
 
     @Override
     void onDeath(Game.TurnType turnType) {
-
-    }
-
-    @Override
-    void onGameSetup() {
 
     }
 }

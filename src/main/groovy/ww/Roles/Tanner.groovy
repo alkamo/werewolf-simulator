@@ -16,37 +16,16 @@
 
 package ww.Roles
 
-import ww.ActionlessPlayer
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
-import ww.SoloPlayer
+import ww.*
 
-class Tanner extends ActionlessPlayer implements SoloPlayer {
+class Tanner extends Player implements WinCondition {
 
     Tanner(Parameters parameters, List<? extends Player> players) {
-        super(Role.TANNER, parameters, players)
+        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, -2, false)
     }
 
     @Override
     Boolean checkForWin() {
         return !alive
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-    }
-
-    @Override
-    void onGameSetup() {
-
     }
 }

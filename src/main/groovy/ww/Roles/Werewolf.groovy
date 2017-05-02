@@ -16,30 +16,14 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
+import ww.Identity
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.TeamType
 
-//Complete(?)
 class Werewolf extends Player {
 
     Werewolf(Parameters parameters, List<? extends Player> players) {
-        super(Role.WEREWOLF, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-    }
-
-    @Override
-    void onGameSetup() {
-
+        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -6, true)
     }
 }

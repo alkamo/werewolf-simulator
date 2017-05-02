@@ -16,18 +16,14 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class Huntress extends Player {
+class Huntress extends Player implements NightActive {
 
     Boolean shotUsed = false
 
     Huntress(Parameters parameters, List<? extends Player> players) {
-        super(Role.HUNTRESS, parameters, players)
+        super(parameters, players, 3)
     }
 
     @Override
@@ -35,7 +31,7 @@ class Huntress extends Player {
         if (!shotUsed && alive) {
             List<? extends Player> potentialKills = players.findAll {
                 Player player ->
-                    alive && identityKnownBy.contains(this) && getIdentity() == Role.Identity.WEREWOLF
+                    alive && identityKnownBy.contains(this) && getIdentity() == Identity.WEREWOLF
             }
             if (potentialKills.size() == 0 && new Random().nextInt(2)) {
                 potentialKills = players.findAll {
@@ -43,18 +39,15 @@ class Huntress extends Player {
                         alive && !identityKnownBy.contains(this) && player != this
                 }
             }
-            potentialKills.get(new Random().nextInt(potentialKills.size())).kill(Game.TurnType.NIGHT)
+            nightState.playersToBeKilled.add(
+                    new KillChoice(
+                            playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
+                            killedByPlayer: this))
         }
     }
 
-
     @Override
-    void onDeath(Game.TurnType turnType) {
-
-    }
-
-    @Override
-    void onGameSetup() {
-
+    Integer getNightOrder() {
+        return 5
     }
 }

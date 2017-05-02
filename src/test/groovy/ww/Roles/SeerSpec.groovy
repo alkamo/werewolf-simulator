@@ -2,11 +2,12 @@ package ww.Roles
 
 import spock.lang.Specification
 import ww.Game
+import ww.NightState
 import ww.Parameters
 import ww.Player
 
 
-class SeerTest extends Specification {
+class SeerSpec extends Specification {
     def "NightAction"() {
         setup:
         Parameters parameters = new Parameters()
@@ -15,8 +16,9 @@ class SeerTest extends Specification {
         players.add(new Seer(parameters, players))
         players.add(new Werewolf(parameters, players))
         Seer seer = (Seer) players[0]
+        NightState nightState = new NightState(5)
         when:
-        seer.nightAction(blarg)
+        seer.nightAction(nightState)
         then:
         players[1].identityKnownBy.contains(seer)
 

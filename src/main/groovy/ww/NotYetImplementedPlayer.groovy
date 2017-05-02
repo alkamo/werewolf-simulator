@@ -18,21 +18,13 @@ package ww
 
 abstract class NotYetImplementedPlayer extends Player {
 
-    NotYetImplementedPlayer(Role role, Parameters parameters, List<Player> players) {
-        super(role, parameters, players)
+    NotYetImplementedPlayer(Parameters parameters, List<Player> players, TeamType teamType, Identity identity, Integer weight, Boolean preventsVillageWin) {
+        super(parameters, players, teamType, identity, weight, preventsVillageWin)
         throw new Exception('Not yet implemeted')
     }
 
-    @Override
-    void nightAction(NightState nightState) {
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-    }
-
-    @Override
-    void onGameSetup() {
+    NotYetImplementedPlayer(Parameters parameters, List<Player> players, Integer weight) {
+        super(parameters, players, weight)
+        throw new Exception('Not yet implemeted')
     }
 }

@@ -16,14 +16,14 @@
 
 package ww.Roles
 
-import ww.NotYetImplementedPlayer
+import ww.Identity
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.TeamType
 
-class WolfMan extends NotYetImplementedPlayer {
+class WolfMan extends Player {
 
     WolfMan(Parameters parameters, List<? extends Player> players) {
-        super(Role.WOLF_MAN, parameters, players)
+        super(parameters, players, TeamType.WEREWOLF, Identity.VILLAGER, -9, true)
     }
 }

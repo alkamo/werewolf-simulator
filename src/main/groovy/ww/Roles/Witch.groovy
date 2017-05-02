@@ -18,16 +18,31 @@ package ww.Roles
 
 import ww.*
 
-class Witch extends Player {
+class Witch extends NotYetImplementedPlayer implements NightActive {
     Boolean usedHeal = false
     Boolean usedKill = false
 
     Witch(Parameters parameters, List<? extends Player> players) {
-        super(Role.WITCH, parameters, players)
+        super(parameters, players, 4)
     }
 
     void useKillPotion(NightState nightState) {
         if (!this.usedKill) {
+            List<? extends Player> potentialKills = players.findAll {
+                Player player ->
+                    (player.alive
+                            && player.identityKnownByTeam.contains(this))
+            }
+            if (potentialKills.size() == 0) {
+                potentialKills = players.findAll {
+                    Player player ->
+                        player.alive && player != this
+                }
+            }
+            nightState.playersToBeKilled.add(
+                    new KillChoice(
+                            playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
+                            killedByPlayer: this))
 
         }
     }
@@ -58,7 +73,7 @@ class Witch extends Player {
             List<KillChoice> savablePlayers = nightState.playersToBeKilled.findAll {
                 (it.killedByTeam.teamType == TeamType.WEREWOLF)
             }
-            saveChoice = savablePlayers.get(new Random().nextInt(savablePlayers.size())).playerToBeKilled
+            saveChoice = (Player) Utilities.pickRandomElement(savablePlayers).playerToBeKilled
         }
         if (null != saveChoice) {
             this.useSavePotion(nightState, saveChoice)
@@ -71,12 +86,8 @@ class Witch extends Player {
         useKillPotionOptionally(nightState)
     }
 
-
     @Override
-    void onDeath(Game.TurnType turnType) {
-    }
-
-    @Override
-    void onGameSetup() {
+    Integer getNightOrder() {
+        return 2
     }
 }

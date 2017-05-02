@@ -16,14 +16,33 @@
 
 package ww.Roles
 
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
+import ww.Teams.Solo
 
-class CultLeader extends NotYetImplementedPlayer {
+class CultLeader extends Player implements NightActive, WinCondition {
+
+    List<? extends Player> cultists = [this]
 
     CultLeader(Parameters parameters, List<? extends Player> players) {
-        super(Role.CULT_LEADER, parameters, players)
+        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, 1, true)
+    }
+
+    @Override
+    Boolean checkForWin() {
+        return players.findAll { alive }.size() == cultists.findAll { alive }.size()
+    }
+
+    @Override
+    void nightAction(NightState nightState) {
+        List<? extends Player> potentialCultists = players.findAll {
+            Player player ->
+                (player.alive && !cultists.contains(player))
+        }
+        cultists.add((Player) Utilities.pickRandomElement(potentialCultists))
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 11
     }
 }

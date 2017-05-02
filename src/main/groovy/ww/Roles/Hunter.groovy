@@ -16,40 +16,26 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-//Complete
-class Hunter extends Player {
+class Hunter extends NotYetImplementedPlayer implements DeathActive {
 
     Hunter(Parameters parameters, List<? extends Player> players) {
-        super(Role.HUNTER, parameters, players)
+        super(parameters, players, 3)
     }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
 
     @Override
     void onDeath(Game.TurnType turnType) {
         List<? extends Player> potentialKills = players.findAll {
             Player player ->
-                alive && identityKnownBy.contains(this) && getIdentity() == Role.Identity.WEREWOLF}
+                alive && identityKnownBy.contains(this) && getIdentity() == Identity.WEREWOLF
+        }
         if (potentialKills.size() == 0) {
             potentialKills = players.findAll {
                 Player player ->
-                    alive && !identityKnownBy.contains(this) && player != this}
+                    alive && !identityKnownBy.contains(this) && player != this
+            }
         }
-        potentialKills.get(new Random().nextInt(potentialKills.size())).kill(turnType)
-    }
-
-    @Override
-    void onGameSetup() {
-
+        Utilities.pickRandomElement(potentialKills).kill(turnType)
     }
 }

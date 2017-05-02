@@ -17,11 +17,12 @@
 package ww.Roles
 
 import ww.*
+import ww.Teams.Solo
 
-class Chupacabra extends NotYetImplementedPlayer implements SoloPlayer {
+class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightActive {
 
     Chupacabra(Parameters parameters, List<? extends Player> players) {
-        super(Role.CHUPACABRA, parameters, players)
+        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, 4, true)
     }
 
     @Override
@@ -29,19 +30,13 @@ class Chupacabra extends NotYetImplementedPlayer implements SoloPlayer {
 
     }
 
-
     @Override
-    void onDeath(Game.TurnType turnType) {
-
-    }
-
-    @Override
-    void onGameSetup() {
-
+    Integer getNightOrder() {
+        return 6
     }
 
     @Override
     Boolean checkForWin() {
-        return (alive && players.findAll{alive}.size() == 1)
+        return (alive && players.findAll { alive }.size() == 1)
     }
 }

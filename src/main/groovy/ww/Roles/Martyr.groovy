@@ -16,14 +16,25 @@
 
 package ww.Roles
 
+import ww.DayActive
+import ww.DayState
 import ww.NotYetImplementedPlayer
 import ww.Parameters
 import ww.Player
-import ww.Role
 
-class Martyr extends NotYetImplementedPlayer {
+class Martyr extends NotYetImplementedPlayer implements DayActive {
 
     Martyr(Parameters parameters, List<? extends Player> players) {
-        super(Role.MARTYR, parameters, players)
+        super(parameters, players, 3)
+    }
+
+    @Override
+    void dayAction(DayState dayState) {
+
+    }
+
+    @Override
+    Integer getDayOrder() {
+        return 1
     }
 }

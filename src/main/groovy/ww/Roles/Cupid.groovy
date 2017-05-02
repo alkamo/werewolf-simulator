@@ -16,28 +16,17 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
+import ww.Identity
 import ww.Parameters
 import ww.Player
-import ww.Role
+import ww.SetupActive
+import ww.Teams.Village
+import ww.Utilities
 
-//Complete
-class Cupid extends Player {
+class Cupid extends Player implements SetupActive {
 
     Cupid(Parameters parameters, List<? extends Player> players) {
-        super(Role.CUPID, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-
+        super(parameters, players, -3)
     }
 
     @Override
@@ -46,9 +35,9 @@ class Cupid extends Player {
             Player player ->
                 player != this
         }
-        Player lover1 = potentialLovers.get(new Random().nextInt(potentialLovers.size()))
+        Player lover1 = (Player) Utilities.pickRandomElement(potentialLovers)
         potentialLovers.remove(lover1)
-        Player lover2 = potentialLovers.get(new Random().nextInt(potentialLovers.size()))
+        Player lover2 = (Player) Utilities.pickRandomElement(potentialLovers)
         lover1.deathLinks.add(lover2)
         lover2.deathLinks.add(lover1)
     }

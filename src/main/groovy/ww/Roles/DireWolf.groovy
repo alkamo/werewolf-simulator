@@ -16,28 +16,12 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.Identity
-import ww.NightState
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class DireWolf extends Player {
+class DireWolf extends Player implements SetupActive {
 
     DireWolf(Parameters parameters, List<? extends Player> players) {
-        super(Role.DIRE_WOLF, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-
-    }
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-
+        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -4, true)
     }
 
     @Override
@@ -45,9 +29,9 @@ class DireWolf extends Player {
         List<? extends Player> potentialCompanion = players.findAll {
             Player player ->
                 (player != this
-                && player.role.identity != Identity.WEREWOLF)
+                        && player.identity != Identity.WEREWOLF)
         }
-        Player companion = potentialCompanion.get(new Random().nextInt(potentialCompanion.size()))
+        Player companion = (Player) Utilities.pickRandomElement(potentialCompanion)
         companion.deathLinks.add(this)
     }
 }

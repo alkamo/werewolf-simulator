@@ -16,6 +16,18 @@
 
 package ww
 
-interface SoloPlayer {
-    abstract Boolean checkForWin()
+
+abstract class GameState {
+    List<KillChoice> playersToBeKilled = []
+    Integer cycleNumber
+
+    GameState(Integer cycleNumber) {
+        this.cycleNumber = cycleNumber
+    }
+
+    void killSelectedPlayers() {
+        playersToBeKilled.each{Player player
+            player.kill()
+        }
+    }
 }

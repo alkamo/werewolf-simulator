@@ -27,22 +27,29 @@ abstract class Team {
         this.players = players;
     }
 
-    abstract void nightAction(NightState nightState)
-
-    abstract void onGameSetup()
-
-    abstract Boolean checkForWin()
-
     public void shareKnowledge() {
-        List<? extends Player> knownPlayers = players.findAll{it.alive && it.identityKnownByTeam.contains(this)}
-        List<? extends Player> teamPlayers = players.findAll{it.alive && it.team == this}
-
-        teamPlayers.each{teamPlayer ->
-            knownPlayers.each{knownPlayer ->
+        getLivePlayersOnTeam().each{teamPlayer ->
+            getLivePlayersKnownToTeam().each{ knownPlayer ->
                 if (!knownPlayer.identityKnownBy.contains(teamPlayer)) {
                     knownPlayer.identityKnownBy.add(teamPlayer)
                 }
             }
         }
+    }
+
+    List<? extends Player> getLivePlayersOnTeam() {
+        return players.findAll { it.role.teamType == this.teamType && it.alive }
+    }
+
+    List<? extends Player> getLivePlayersNotOnTeam() {
+        return players.findAll { it.role.teamType != this.teamType && it.alive }
+    }
+
+    List<? extends Player> getLivePlayersKnownToTeam() {
+        return players.findAll { it.alive && it.identityKnownByTeam.contains(this) }
+    }
+
+    List<? extends Player> getLivePlayersUnknownToTeam() {
+        return players.findAll { it.alive && it.identityKnownByTeam.contains(this) }
     }
 }

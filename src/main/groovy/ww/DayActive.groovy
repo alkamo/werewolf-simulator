@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package ww.Roles
+package ww
 
-import ww.DeathActive
-import ww.Game
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
+interface DayActive {
+    void dayAction(DayState dayState)
 
-class Prince extends NotYetImplementedPlayer implements DeathActive {
-
-    Prince(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
-    }
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-
-    }
+    Integer getDayOrder()
 }

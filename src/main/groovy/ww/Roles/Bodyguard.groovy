@@ -16,14 +16,22 @@
 
 package ww.Roles
 
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
+import ww.Teams.Village
 
-class Bodyguard extends NotYetImplementedPlayer {
+class Bodyguard extends NotYetImplementedPlayer implements NightActive {
 
     Bodyguard(Parameters parameters, List<? extends Player> players) {
-        super(Role.BODYGUARD, parameters, players)
+        super(parameters, players, 3)
+    }
+
+    @Override
+    void nightAction(NightState nightState) {
+
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 0
     }
 }

@@ -16,14 +16,25 @@
 
 package ww.Roles
 
+import ww.NightActive
+import ww.NightState
 import ww.NotYetImplementedPlayer
 import ww.Parameters
 import ww.Player
-import ww.Role
 
-class Revealer extends NotYetImplementedPlayer {
+class Revealer extends NotYetImplementedPlayer implements NightActive {
 
     Revealer(Parameters parameters, List<? extends Player> players) {
-        super(Role.REVEALER, parameters, players)
+        super(parameters, players, 4)
+    }
+
+    @Override
+    void nightAction(NightState nightState) {
+
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 13
     }
 }

@@ -16,28 +16,16 @@
 
 package ww.Teams
 
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Team
-import ww.TeamType
+import ww.*
 
-
-class Village extends Team {
+class Village extends Team implements WinCondition {
     Village(Parameters parameters, List<? extends Player> players) {
         super(TeamType.VILLAGE, parameters, players)
     }
 
     @Override
-    void nightAction(NightState nightState) {
-    }
-
-    @Override
-    void onGameSetup() {
-    }
-
-    @Override
     Boolean checkForWin() {
-        return players.findAll{it.alive && it.role.preventsVillageWin}.size() == 0
+        return (players.findAll { it.role.preventsVillageWin && it.alive }.size() == 0
+                && getLivePlayersOnTeam().size() > 0)
     }
 }

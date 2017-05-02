@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-package ww.Teams
+package ww
 
-import ww.*
-
-class Cult extends Team {
-    Cult(Parameters parameters, List<? extends Player> players) {
-        super(TeamType.CULT, parameters, players)
-    }
-
-    @Override
-    void nightAction(NightState nightState) {
-    }
-
-    @Override
-    void onGameSetup() {
-    }
-
-    @Override
-    Boolean checkForWin() {
-        return players.findAll{it.alive && !it.cultist}.size() == 0
-    }
+interface SetupActive {
+    void onGameSetup()
 }

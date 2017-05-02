@@ -22,17 +22,4 @@ class Solo extends Team {
     Solo(Parameters parameters, List<? extends Player> players) {
         super(TeamType.SOLO, parameters, players)
     }
-
-    @Override
-    void nightAction(NightState nightState) {
-    }
-
-    @Override
-    void onGameSetup() {
-    }
-
-    @Override
-    Boolean checkForWin() {
-        return null
-    }
 }

@@ -16,7 +16,6 @@
 
 package ww
 
-import ww.Teams.Cult
 import ww.Teams.Solo
 import ww.Teams.Village
 import ww.Teams.Werewolves
@@ -24,8 +23,7 @@ import ww.Teams.Werewolves
 enum TeamType {
     VILLAGE(Village.class),
     WEREWOLF(Werewolves.class),
-    SOLO(Solo.class),
-    CULT(Cult.class)
+    SOLO(Solo.class)
 
     Class teamClass;
 

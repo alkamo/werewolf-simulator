@@ -17,14 +17,14 @@
 package ww
 
 
-class NightState {
-    List<KillChoice> playersToBeKilled = []
+class NightState extends GameState {
     Integer werewolfKills = 1
-    Integer nightNumber
 
-    void killSelectedPlayers() {
-        playersToBeKilled.each{Player player
-            player.kill()
-        }
+    NightState(Integer nightNumber) {
+        super(nightNumber)
+    }
+
+    Integer getNightNumber() {
+        return cycleNumber
     }
 }

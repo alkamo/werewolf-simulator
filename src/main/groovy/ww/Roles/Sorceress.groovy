@@ -16,16 +16,12 @@
 
 package ww.Roles
 
-import ww.Game
-import ww.NightState
-import ww.Parameters
-import ww.Player
-import ww.Role
+import ww.*
 
-class Sorceress extends Player {
+class Sorceress extends Player implements NightActive {
 
     Sorceress(Parameters parameters, List<? extends Player> players) {
-        super(Role.SORCERESS, parameters, players)
+        super(parameters, players, TeamType.WEREWOLF, Identity.VILLAGER, -3, false)
     }
 
     @Override
@@ -35,19 +31,13 @@ class Sorceress extends Player {
                 (alive
                         && !identityKnownBy.contains(this)
                         && player != this
-                        && role.teamType != Role.Team.WEREWOLF)
+                        && team != this.team)
         }
-        potentialLooks.get(new Random().nextInt(potentialLooks.size())).identityKnownBy.add(this)
-    }
-
-
-    @Override
-    void onDeath(Game.TurnType turnType) {
-
+        (Player) Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
     }
 
     @Override
-    void onGameSetup() {
-
+    Integer getNightOrder() {
+        return 14
     }
 }
