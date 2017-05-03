@@ -25,7 +25,7 @@ class DrBoom extends NotYetImplementedPlayer implements DeathActive {
     DrBoom() {
         super()
         this.weight = -2
-        this.playerName = 'Dr. Boom';
+        this.name = 'Dr. Boom';
     }
 
     @Override

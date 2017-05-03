@@ -17,7 +17,6 @@
 package ww.Roles
 
 import ww.*
-import ww.Teams.Solo
 
 class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition {
 
@@ -43,5 +42,10 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
     @Override
     Boolean checkForWin() {
         return players.findAll { alive }.size() == blob.findAll { alive }.size()
+    }
+
+    @Override
+    void updateStats(Map<String, Statistic> stats) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin())
     }
 }

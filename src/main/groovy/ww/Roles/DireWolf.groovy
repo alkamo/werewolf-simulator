@@ -26,7 +26,7 @@ class DireWolf extends Player implements SetupActive {
         this.identity = Identity.WEREWOLF
         this.weight = -4
         this.preventsVillageWin = true
-        this.playerName = 'Dire Wolf';
+        this.name = 'Dire Wolf';
     }
 
     @Override

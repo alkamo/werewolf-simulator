@@ -16,11 +16,14 @@
 
 package ww
 
+import java.math.RoundingMode
+
 class Game {
     private Parameters parameters
     private RoleSet roleSet
     private List<? extends Player> players = []
     private Map<TeamType, ? extends Team> teams = [:]
+    GameState currentState
 
     Game(Parameters parameters, RoleSet roleSet) {
         this.parameters = parameters
@@ -42,13 +45,12 @@ class Game {
     void play() {
         this.roleSet.setupPlayersAndTeams(parameters, players, teams)
         setupActions()
-        GameState currentState = new NightState(0, parameters, players, teams)
+        currentState = new NightState(0, parameters, players, teams)
         currentState.execute()
         while (!hasSomeoneWon()) {
             currentState = currentState.getNextState()
             currentState.execute()
         }
-        whoWon()
     }
 
     Boolean hasSomeoneWon() {
@@ -57,14 +59,47 @@ class Game {
         return teamWon || playerWon
     }
 
-    void whoWon() {
-        teams.values().findAll { (it instanceof WinCondition && it.checkForWin()) }.each{
+    List<String> whoWon() {
+        List<String> winners = []
+        teams.values().findAll { (it instanceof WinCondition && it.checkForWin()) }.each {
             Team team ->
-                System.out.println(team.teamName)
+                winners.add(team.name)
         }
-        players.findAll { it instanceof WinCondition && it.checkForWin() }.each{
+        players.findAll { it instanceof WinCondition && it.checkForWin() }.each {
             Player player ->
-                System.out.println(player.playerName)
+                winners.add(player.name)
         }
+        return winners
     }
+
+    void updateStats(Map<String, Statistic> stats) {
+        players.findAll{
+            it instanceof ProvidesStats
+        }.each{ProvidesStats it ->
+            it.updateStats(stats)
+        }
+        teams.values().findAll{
+            it instanceof ProvidesStats
+        }.each{ProvidesStats it ->
+            it.updateStats(stats)
+        }
+        if (whoWon().size() > 1) {
+            Utilities.addStatIfMissing(stats, "Multiple Winners", [Statistic.AggregateType.PERCENTAGE], 1)
+        }
+        if (currentState.turnType == GameState.TurnType.NIGHT) {
+            Utilities.addStatIfMissing(stats, "Night End", [Statistic.AggregateType.PERCENTAGE], 1)
+        } else {
+            Utilities.addStatIfMissing(stats, "Day End", [Statistic.AggregateType.PERCENTAGE], 1)
+        }
+        Utilities.addStatIfMissing(stats,
+                "Ended on Round",
+                [Statistic.AggregateType.AVERAGE,
+                 Statistic.AggregateType.MIN,
+                 Statistic.AggregateType.MAX],
+                0,
+                RoundingMode.FLOOR,
+                currentState.cycleNumber)
+    }
+
+
 }

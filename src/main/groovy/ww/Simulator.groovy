@@ -16,24 +16,60 @@
 
 package ww
 
-
 class Simulator {
 
-    public static void main(String[] args){
-        Integer iterations = args[0].toInteger()
+    public static void main(String[] args) {
+        def cli = new CliBuilder(usage: 'Simulator.groovy -[irfph]')
+        cli.with {
+            i longOpt: 'iteration', 'Number of Iterations', args: 1, required: false, type: Integer
+            r longOpt: 'roleset', 'Predefined Role Set', args: 1, required: false, type: String
+            f longOpt: 'rolesetfile', 'Role Set File', args: 1, required: false, type: String
+            p longOpt: 'properties', 'Properties File', args: 1, required: false, type: String
+            h longOpt: 'help', 'Usage', required: false
+        }
+        def options = cli.parse(args)
+        if (options.h) {
+            cli.usage()
+            return
+        }
+        Integer iterations = 1
+        if (options.i) {
+            iterations = options.i.trim().toInteger()
+        }
+
+        RoleSet.Predefined predefinedRoleSet = RoleSet.Predefined.BASIC_7
+        if (options.r) {
+            predefinedRoleSet = RoleSet.Predefined.valueOf(options.r.trim().toUpperCase())
+        }
+        RoleSet roleSet = new RoleSet(predefinedRoleSet)
+
+
+
+        if (options.f) {
+            throw new Exception('Role set files are not yet supported')
+        }
+
         Properties properties = new Properties()
-        if (args.size() > 1) {
-            File propertiesFile = new File(args[1])
-            propertiesFile.withInputStream {
-                properties.load(it)
+        if (options.p) {
+            throw new Exception('Property files are not yet supported')
+        }
+
+        List<Game> games = []
+        Map<String, Statistic> stats = [:]
+        iterations.times {
+            Parameters parameters = new Parameters()
+            Game game = new Game(parameters, roleSet)
+            game.play()
+            games.add(game)
+            game.updateStats(stats)
+        }
+        System.out.println('------------------------')
+        stats.each { String key, Statistic value ->
+            value.getFormattedFinalValues(iterations).each {
+                System.out.println(it)
             }
 
         }
-        iterations.times {
-            Parameters parameters = new Parameters()
-            RoleSet roleSet = new RoleSet(RoleSet.Predefined.BASIC7)
-            Game game = new Game(parameters, roleSet)
-            game.play()
-        }
+        System.out.println('------------------------')
     }
 }

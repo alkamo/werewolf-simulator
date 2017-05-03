@@ -27,7 +27,7 @@ class CultLeader extends Player implements NightActive, WinCondition {
         this.teamType = TeamType.SOLO
         this.weight = 1
         this.preventsVillageWin = true
-        this.playerName = 'Cult Leader';
+        this.name = 'Cult Leader';
     }
 
     @Override
@@ -47,5 +47,10 @@ class CultLeader extends Player implements NightActive, WinCondition {
     @Override
     Integer getNightOrder() {
         return 11
+    }
+
+    @Override
+    void updateStats(Map<String, Statistic> stats) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin())
     }
 }

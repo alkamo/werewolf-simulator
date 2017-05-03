@@ -19,13 +19,17 @@ package ww
 
 class RoleSet {
     enum Predefined {
-        BASIC7(
+        BASIC_7(
                 [(Role.VILLAGER): 6,
                  (Role.WEREWOLF): 1]),
-        STANDARD9(
+        STANDARD_9(
                 [(Role.VILLAGER): 7,
                  (Role.SEER)    : 1,
-                 (Role.WEREWOLF): 2])
+                 (Role.WEREWOLF): 2]),
+        BASIC_AND_TANNER_11(
+                [(Role.VILLAGER): 9,
+                 (Role.TANNER)  : 1,
+                 (Role.WEREWOLF): 1])
 
         Map<Role, Integer> roleMap
 

@@ -20,11 +20,22 @@ import spock.lang.Specification
 
 
 class SimulatorSpec extends Specification {
-    def "Main"() {
+    def "Main - Basic(1000)"() {
         setup:
-        String[] args = ['1']
+        String[] args = ['-i 200']
         expect:
         Simulator.main(args)
-
+    }
+    def "Main - Basic_Tanner(1000)"() {
+        setup:
+        String[] args = ['-i 200','-r BASIC_AND_TANNER_11']
+        expect:
+        Simulator.main(args)
+    }
+    def "Main - Standard(1000)"() {
+        setup:
+        String[] args = ['-i 200','-r STANDARD_9']
+        expect:
+        Simulator.main(args)
     }
 }

@@ -25,7 +25,7 @@ class OldMan extends NotYetImplementedPlayer implements NightActive {
     OldMan() {
         super()
         this.weight = 0
-        this.playerName = 'Old Man';
+        this.name = 'Old Man';
     }
 
     @Override

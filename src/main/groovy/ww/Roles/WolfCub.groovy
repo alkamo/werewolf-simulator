@@ -26,7 +26,7 @@ class WolfCub extends NotYetImplementedPlayer implements DeathActive {
         this.identity = Identity.WEREWOLF
         this.weight = -8
         this.preventsVillageWin = true
-        this.playerName = 'Wolf Cub';
+        this.name = 'Wolf Cub';
     }
 
     @Override

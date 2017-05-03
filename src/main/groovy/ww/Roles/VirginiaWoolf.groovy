@@ -25,7 +25,7 @@ class VirginiaWoolf extends Player implements SetupActive {
     VirginiaWoolf() {
         super()
         this.weight = -2
-        this.playerName = 'Virginia Woolf';
+        this.name = 'Virginia Woolf';
     }
 
     @Override

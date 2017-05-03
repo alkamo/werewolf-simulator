@@ -27,12 +27,12 @@ class Parameters {
 
     Boolean seerClearsIfUnbrokenPath = true
     Boolean firstDayLynch = true
-    SeerClearPattern seerClearPattern = SeerClearPattern.ALTERNATE_SIDES
+    SeerClearPattern seerClearPattern = SeerClearPattern.RANDOM
     Integer lynchThreshold = 0
     Boolean werewolvesChooseLycan = false
     Boolean werewolvesChooseMinion = false
     Boolean witchSeesVictimAfterSave = false
-    Boolean endGameAtParity = false
+    Boolean endGameAtParity = true
 
     Map<Role, Integer> roles = [(Role.VILLAGER): 6,
                                 (Role.WEREWOLF): 1]

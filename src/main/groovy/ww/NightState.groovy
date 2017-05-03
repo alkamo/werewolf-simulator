@@ -27,7 +27,7 @@ class NightState extends GameState {
 
     @Override
     def getNextState() {
-        return new NightState(cycleNumber + 1, parameters, players, teams)
+        return new DayState(cycleNumber + 1, parameters, players, teams)
     }
 
     @Override

@@ -29,4 +29,9 @@ class Village extends Team implements WinCondition {
         return (players.findAll { it.preventsVillageWin && it.alive }.size() == 0
                 && getLivePlayersOnTeam().size() > 0)
     }
+
+    @Override
+    void updateStats(Map<String, Statistic> stats) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin())
+    }
 }

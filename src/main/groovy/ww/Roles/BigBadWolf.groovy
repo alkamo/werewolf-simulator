@@ -26,6 +26,6 @@ class BigBadWolf extends NotYetImplementedPlayer {
         this.identity = Identity.WEREWOLF
         this.weight = -9
         this.preventsVillageWin = true
-        this.playerName = 'Big Bad Wolf';
+        this.name = 'Big Bad Wolf';
     }
 }

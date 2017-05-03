@@ -25,7 +25,7 @@ abstract class Player {
     List<? extends Player> players
     List<? extends Player> deathLinks = []
     Team team
-    String playerName
+    String name
 
     Identity identity = Identity.VILLAGER;
     Integer weight = 1;
@@ -33,7 +33,7 @@ abstract class Player {
     TeamType teamType = TeamType.VILLAGE;
 
     Player() {
-        this.playerName = this.getClass().getSimpleName()
+        this.name = this.getClass().getSimpleName()
     }
 
     void kill(GameState.TurnType turnType) {

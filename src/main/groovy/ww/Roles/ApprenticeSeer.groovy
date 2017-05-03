@@ -24,7 +24,7 @@ class ApprenticeSeer extends Seer {
     ApprenticeSeer() {
         super()
         weight = 4
-        this.playerName = 'Apprentice Seer';
+        this.name = 'Apprentice Seer';
     }
 
     @Override

@@ -26,6 +26,6 @@ class WolfMan extends Player {
         this.teamType = TeamType.WEREWOLF
         this.weight = -9
         this.preventsVillageWin = true
-        this.playerName = 'Wolf-Man';
+        this.name = 'Wolf-Man';
     }
 }

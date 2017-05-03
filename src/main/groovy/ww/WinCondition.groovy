@@ -16,6 +16,6 @@
 
 package ww
 
-interface WinCondition {
+interface WinCondition extends ProvidesStats {
     abstract Boolean checkForWin()
 }

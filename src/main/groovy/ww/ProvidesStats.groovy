@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-package ww.Roles
+package ww
 
-import ww.*
-
-class Tanner extends Player implements WinCondition {
-
-    Tanner() {
-        super()
-        this.teamType = TeamType.SOLO
-        this.weight = -2
-    }
-
-    @Override
-    Boolean checkForWin() {
-        return !alive
-    }
-
-    @Override
-    void updateStats(Map<String, Statistic> stats) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin())
-    }
+interface ProvidesStats {
+    void updateStats(Map<String, Statistic> stats)
 }

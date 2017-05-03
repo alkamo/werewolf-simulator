@@ -20,10 +20,10 @@ abstract class Team {
     TeamType teamType
     List<? extends Player> players
     Parameters parameters
-    String teamName
+    String name
 
     Team() {
-        this.teamName = this.getClass().getSimpleName()
+        this.name = this.getClass().getSimpleName()
     }
 
     public void shareKnowledge() {

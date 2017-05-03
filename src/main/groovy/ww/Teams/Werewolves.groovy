@@ -61,4 +61,9 @@ class Werewolves extends Team implements WinCondition, NightActive{
 
         return won
     }
+
+    @Override
+    void updateStats(Map<String, Statistic> stats) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin())
+    }
 }
