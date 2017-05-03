@@ -20,7 +20,12 @@ import ww.*
 
 class BigBadWolf extends NotYetImplementedPlayer {
 
-    BigBadWolf(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -9, true)
+    BigBadWolf() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.identity = Identity.WEREWOLF
+        this.weight = -9
+        this.preventsVillageWin = true
+        this.playerName = 'Big Bad Wolf';
     }
 }

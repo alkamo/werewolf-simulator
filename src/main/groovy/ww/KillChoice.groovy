@@ -21,4 +21,21 @@ class KillChoice {
     Player playerToBeKilled
     Player killedByPlayer
     Team killedByTeam
+    GameState gameState
+
+    KillChoice(Player player, Team killedBy, GameState gameState) {
+        this.playerToBeKilled = player
+        this.killedByTeam = killedBy
+        this.gameState = gameState
+    }
+
+    KillChoice(Player player, Player killedBy, GameState gameState) {
+        this.playerToBeKilled = player
+        this.killedByPlayer = killedBy
+        this.gameState = gameState
+    }
+
+    void kill() {
+        playerToBeKilled.kill(gameState.turnType)
+    }
 }

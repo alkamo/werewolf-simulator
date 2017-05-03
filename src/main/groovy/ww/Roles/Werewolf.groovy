@@ -23,7 +23,11 @@ import ww.TeamType
 
 class Werewolf extends Player {
 
-    Werewolf(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -6, true)
+    Werewolf() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.identity = Identity.WEREWOLF
+        this.weight = -6
+        this.preventsVillageWin = true
     }
 }

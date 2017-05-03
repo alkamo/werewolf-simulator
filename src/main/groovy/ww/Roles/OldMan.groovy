@@ -19,13 +19,13 @@ package ww.Roles
 import ww.NightActive
 import ww.NightState
 import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
 
 class OldMan extends NotYetImplementedPlayer implements NightActive {
 
-    OldMan(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 0)
+    OldMan() {
+        super()
+        this.weight = 0
+        this.playerName = 'Old Man';
     }
 
     @Override

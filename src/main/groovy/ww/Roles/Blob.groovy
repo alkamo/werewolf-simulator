@@ -23,8 +23,11 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
 
     List<? extends Player> blob
 
-    Blob(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, -1, true)
+    Blob() {
+        super()
+        this.teamType = TeamType.SOLO
+        this.weight = -1
+        this.preventsVillageWin = true
     }
 
     @Override

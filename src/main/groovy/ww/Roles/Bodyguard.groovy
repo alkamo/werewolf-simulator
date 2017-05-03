@@ -21,8 +21,9 @@ import ww.Teams.Village
 
 class Bodyguard extends NotYetImplementedPlayer implements NightActive {
 
-    Bodyguard(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
+    Bodyguard() {
+        super()
+        this.weight = 3
     }
 
     @Override

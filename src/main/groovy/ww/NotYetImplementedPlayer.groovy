@@ -27,4 +27,8 @@ abstract class NotYetImplementedPlayer extends Player {
         super(parameters, players, weight)
         throw new Exception('Not yet implemeted')
     }
+
+    NotYetImplementedPlayer() {
+        throw new Exception('Not yet implemeted')
+    }
 }

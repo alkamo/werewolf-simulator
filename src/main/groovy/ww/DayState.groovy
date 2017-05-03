@@ -20,52 +20,77 @@ package ww
 class DayState extends GameState {
     Integer lynches = 1
 
-    DayState(Integer dayNumber) {
-        super(dayNumber)
+    DayState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
+        super(cycleNumber, parameters, players, teams)
+        this.turnType = TurnType.DAY
+    }
+
+    @Override
+    def getNextState() {
+        return new NightState(cycleNumber, parameters, players, teams)
+    }
+
+    @Override
+    def execute() {
+        lynch()
+        List<? extends DayActive> dayActors = []
+        dayActors.addAll((List<? extends DayActive>) players
+                .findAll { it.alive && it instanceof DayActive })
+        dayActors.addAll((List<? extends DayActive>) teams
+                .values()
+                .findAll { it instanceof DayActive })
+        dayActors.each { player ->
+            player.dayAction(this)
+        }
+        killSelectedPlayers()
+        shareKnowledge()
     }
 
     Integer getDayNumber() {
         return cycleNumber
     }
 
-    void lynch(Map<TeamType, ? extends Team> teams, List<? extends Player> players) {
-        if (this.dayNumber != 1 || parameters.firstDayLynch) {
-            if (teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()
-                    > teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()) {
-                lynchWerewolf(teams, players)
-            } else if (teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()
-                    > teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()) {
-                lynchVillager(teams, players)
+    void lynch() {
+        lynches.times {
+            if (this.dayNumber != 1 || parameters.firstDayLynch) {
+                if (teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()
+                        > teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()) {
+                    lynchWerewolf()
+                } else if (teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()
+                        > teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()) {
+                    lynchVillager()
+                }
             }
         }
     }
 
-    void lynchWerewolf(Map<TeamType, ? extends Team> teams, List<? extends Player> players) {
-        List<? extends Player> potentialKills = teams[TeamType.VILLAGE].getLivePlayersKnownByTeam().findAll {
+    void lynchWerewolf() {
+        List<? extends Player> potentialKills = teams[TeamType.VILLAGE].getLivePlayersKnownToTeam().findAll {
             Player player ->
-                player.identity = Identity.WEREWOLF
+                (player.identity == Identity.WEREWOLF
+                        && !playersToBeKilled.contains(player))
         }
         if (potentialKills.size() == 0) {
-            potentialKills = teams[TeamType.VILLAGE].getLivePlayersUnknownByTeam()
+            potentialKills = teams[TeamType.VILLAGE].getLivePlayersUnknownToTeam().findAll {
+                Player player ->
+                    !playersToBeKilled.contains(player)
+            }
         }
-        this.playersToBeKilled.add(
-                new KillChoice(
-                        playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
-                        killedByTeam: teams[TeamType.VILLAGE]))
+        addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
+                teams[TeamType.VILLAGE])
     }
 
-    void lynchVillager(Map<TeamType, ? extends Team> teams, List<? extends Player> players) {
-        List<? extends Player> potentialKills = teams[TeamType.WEREWOLF].getLivePlayersKnownByTeam()
+    void lynchVillager() {
+        List<? extends Player> potentialKills = teams[TeamType.WEREWOLF].getLivePlayersKnownToTeam()
         if (potentialKills.size() == 0) {
             potentialKills = players.findAll {
                 Player player ->
                     (player.alive
-                            && player.team != teams[TeamType.WEREWOLF])
+                            && player.team != teams[TeamType.WEREWOLF]
+                            && !playersToBeKilled.contains(player))
             }
         }
-        this.playersToBeKilled.add(
-                new KillChoice(
-                        playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
-                        killedByTeam: teams[TeamType.VILLAGE]))
+        addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
+                teams[TeamType.VILLAGE])
     }
 }

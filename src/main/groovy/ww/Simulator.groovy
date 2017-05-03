@@ -21,9 +21,18 @@ class Simulator {
 
     public static void main(String[] args){
         Integer iterations = args[0].toInteger()
+        Properties properties = new Properties()
+        if (args.size() > 1) {
+            File propertiesFile = new File(args[1])
+            propertiesFile.withInputStream {
+                properties.load(it)
+            }
+
+        }
         iterations.times {
             Parameters parameters = new Parameters()
-            Game game = new Game(parameters)
+            RoleSet roleSet = new RoleSet(RoleSet.Predefined.BASIC7)
+            Game game = new Game(parameters, roleSet)
             game.play()
         }
     }

@@ -17,19 +17,18 @@
 package ww.Roles
 
 import ww.DeathActive
-import ww.Game
+import ww.GameState
 import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
 
 class Diseased extends NotYetImplementedPlayer implements DeathActive {
 
-    Diseased(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
+    Diseased() {
+        super()
+        this.weight = 3
     }
 
     @Override
-    void onDeath(Game.TurnType turnType) {
+    void onDeath(GameState.TurnType turnType) {
 
     }
 }

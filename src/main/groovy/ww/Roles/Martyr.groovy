@@ -24,8 +24,9 @@ import ww.Player
 
 class Martyr extends NotYetImplementedPlayer implements DayActive {
 
-    Martyr(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
+    Martyr() {
+        super()
+        this.weight = 3
     }
 
     @Override

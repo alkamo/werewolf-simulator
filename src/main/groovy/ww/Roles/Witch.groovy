@@ -22,8 +22,9 @@ class Witch extends NotYetImplementedPlayer implements NightActive {
     Boolean usedHeal = false
     Boolean usedKill = false
 
-    Witch(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 4)
+    Witch() {
+        super()
+        this.weight = 4
     }
 
     void useKillPotion(NightState nightState) {
@@ -39,11 +40,8 @@ class Witch extends NotYetImplementedPlayer implements NightActive {
                         player.alive && player != this
                 }
             }
-            nightState.playersToBeKilled.add(
-                    new KillChoice(
-                            playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
-                            killedByPlayer: this))
-
+            nightState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
+            this.usedKill = true
         }
     }
 
@@ -57,9 +55,8 @@ class Witch extends NotYetImplementedPlayer implements NightActive {
 
     void useSavePotion(NightState nightState, Player player) {
         if (!this.usedHeal && null != player) {
-            KillChoice saveChoice = nightState.playersToBeKilled.find { it.playerToBeKilled == player }
-            nightState.playersToBeKilled.remove(saveChoice)
-            this.usedHeal = false
+            nightState.removeKill(player)
+            this.usedHeal = true
         }
     }
 

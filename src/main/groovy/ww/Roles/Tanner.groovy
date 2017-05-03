@@ -20,8 +20,10 @@ import ww.*
 
 class Tanner extends Player implements WinCondition {
 
-    Tanner(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, -2, false)
+    Tanner() {
+        super()
+        this.teamType = TeamType.SOLO
+        this.weight = -2
     }
 
     @Override

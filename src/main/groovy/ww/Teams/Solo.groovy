@@ -19,7 +19,8 @@ package ww.Teams
 import ww.*
 
 class Solo extends Team {
-    Solo(Parameters parameters, List<? extends Player> players) {
-        super(TeamType.SOLO, parameters, players)
+    Solo() {
+        super()
+        this.teamType = TeamType.SOLO;
     }
 }

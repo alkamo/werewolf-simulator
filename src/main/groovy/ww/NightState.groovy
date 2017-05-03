@@ -20,8 +20,29 @@ package ww
 class NightState extends GameState {
     Integer werewolfKills = 1
 
-    NightState(Integer nightNumber) {
-        super(nightNumber)
+    NightState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
+        super(cycleNumber, parameters, players, teams)
+        this.turnType = TurnType.NIGHT
+    }
+
+    @Override
+    def getNextState() {
+        return new NightState(cycleNumber + 1, parameters, players, teams)
+    }
+
+    @Override
+    def execute() {
+        List<? extends NightActive> nightActors = []
+        nightActors.addAll((List<? extends NightActive>) players
+                .findAll { it.alive && it instanceof NightActive })
+        nightActors.addAll((List<? extends NightActive>) teams
+                .values()
+                .findAll { it instanceof NightActive })
+        nightActors.each { player ->
+            player.nightAction(this)
+        }
+        killSelectedPlayers()
+        shareKnowledge()
     }
 
     Integer getNightNumber() {

@@ -20,11 +20,10 @@ abstract class Team {
     TeamType teamType
     List<? extends Player> players
     Parameters parameters
+    String teamName
 
-    Team(TeamType teamType, Parameters parameters, List<? extends Player> players) {
-        this.teamType = teamType;
-        this.parameters = parameters;
-        this.players = players;
+    Team() {
+        this.teamName = this.getClass().getSimpleName()
     }
 
     public void shareKnowledge() {
@@ -38,11 +37,11 @@ abstract class Team {
     }
 
     List<? extends Player> getLivePlayersOnTeam() {
-        return players.findAll { it.role.teamType == this.teamType && it.alive }
+        return players.findAll { it.teamType == this.teamType && it.alive }
     }
 
     List<? extends Player> getLivePlayersNotOnTeam() {
-        return players.findAll { it.role.teamType != this.teamType && it.alive }
+        return players.findAll { it.teamType != this.teamType && it.alive }
     }
 
     List<? extends Player> getLivePlayersKnownToTeam() {
@@ -50,6 +49,6 @@ abstract class Team {
     }
 
     List<? extends Player> getLivePlayersUnknownToTeam() {
-        return players.findAll { it.alive && it.identityKnownByTeam.contains(this) }
+        return players.findAll { it.alive && !it.identityKnownByTeam.contains(this) }
     }
 }

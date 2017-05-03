@@ -16,14 +16,16 @@
 
 package ww.Roles
 
-import ww.Identity
-import ww.Parameters
 import ww.Player
 import ww.TeamType
 
 class WolfMan extends Player {
 
-    WolfMan(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.VILLAGER, -9, true)
+    WolfMan() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.weight = -9
+        this.preventsVillageWin = true
+        this.playerName = 'Wolf-Man';
     }
 }

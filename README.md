@@ -2,7 +2,7 @@
 
 This is a work-in-progress application for simulating large numbers of Werewolf games using the same rules across the set of games. This may lend statistical insight to some mechanics/strategies.
 
-_At this time it is totally non-functional._
+_At this time only extremely basic functionality is implemented._
 
 ***
 **A note on strategy:** This simulator assumes that all players are both incredibly stupid and psychic. This does not reflect the way actual games are played terribly well. Trying to build any kind of significant strategy into a simulator of this kind tends to lead to a result that is a test of the strategy implemented, rather than the game itself.

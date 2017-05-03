@@ -25,8 +25,9 @@ import ww.Utilities
 
 class Cupid extends Player implements SetupActive {
 
-    Cupid(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, -3)
+    Cupid() {
+        super()
+        this.weight = -3
     }
 
     @Override

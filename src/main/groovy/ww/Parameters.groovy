@@ -36,4 +36,11 @@ class Parameters {
 
     Map<Role, Integer> roles = [(Role.VILLAGER): 6,
                                 (Role.WEREWOLF): 1]
+
+    void loadFromProperties(Properties properties) {
+        roles.clear()
+        this.firstDayLynch = properties.firstDayLynch?:firstDayLynch
+        this.endGameAtParity = properties.endGameAtParity?:endGameAtParity
+        properties.propertyNames().findAll{it}
+    }
 }

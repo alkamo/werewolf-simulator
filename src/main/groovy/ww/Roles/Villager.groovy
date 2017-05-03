@@ -23,7 +23,7 @@ import ww.Teams.Village
 
 class Villager extends Player {
 
-    Villager(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 1)
+    Villager() {
+        super()
     }
 }

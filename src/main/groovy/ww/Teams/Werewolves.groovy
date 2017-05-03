@@ -21,28 +21,28 @@ import ww.Roles.ApprenticeSeer
 import ww.Roles.Seer
 
 class Werewolves extends Team implements WinCondition, NightActive{
-    Werewolves(Parameters parameters, List<? extends Player> players) {
-        super(TeamType.WEREWOLF, parameters, players)
+    Werewolves() {
+        super()
+        this.teamType = TeamType.WEREWOLF;
     }
 
     @Override
     void nightAction(NightState nightState) {
-        List<? extends Player> potentialKills = players.findAll {
-            Player player ->
-                (player.alive
-                        && (player instanceof Seer || (player instanceof ApprenticeSeer && player.active))
-                        && player.identityKnownByTeam.contains(this))
-        }
-        if (potentialKills.size() == 0) {
-            potentialKills = players.findAll {
+        if (nightState.nightNumber > 0) {
+            List<? extends Player> potentialKills = players.findAll {
                 Player player ->
-                    player.alive && player.role.teamType != this.teamType
+                    (player.alive
+                            && (player instanceof Seer || (player instanceof ApprenticeSeer && player.active))
+                            && player.identityKnownByTeam.contains(this))
             }
+            if (potentialKills.size() == 0) {
+                potentialKills = players.findAll {
+                    Player player ->
+                        player.alive && player.teamType != this.teamType
+                }
+            }
+            nightState.addTeamKill((Player) Utilities.pickRandomElement(potentialKills), this)
         }
-        nightState.playersToBeKilled.add(
-                new KillChoice(
-                        playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
-                        killedByTeam: this))
     }
 
     @Override

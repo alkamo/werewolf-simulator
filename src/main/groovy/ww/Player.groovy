@@ -25,31 +25,18 @@ abstract class Player {
     List<? extends Player> players
     List<? extends Player> deathLinks = []
     Team team
+    String playerName
 
     Identity identity = Identity.VILLAGER;
     Integer weight = 1;
     Boolean preventsVillageWin = false;
     TeamType teamType = TeamType.VILLAGE;
 
-    Player(Parameters parameters, List<Player> players, TeamType teamType, Identity identity, Integer weight, Boolean preventsVillageWin) {
-        this.teamType = teamType
-        this.parameters = parameters;
-        this.players = players;
-        this.identity = identity;
-        this.weight = weight;
-        this.preventsVillageWin = preventsVillageWin;
+    Player() {
+        this.playerName = this.getClass().getSimpleName()
     }
 
-    Player(Parameters parameters, List<Player> players, Integer weight) {
-        this.teamType = teamType
-        this.parameters = parameters;
-        this.players = players;
-        this.identity = identity;
-        this.weight = weight;
-        this.preventsVillageWin = preventsVillageWin;
-    }
-
-    void kill(Game.TurnType turnType) {
+    void kill(GameState.TurnType turnType) {
         this.alive = false
         if (this instanceof DeathActive) {
             DeathActive deathPlayer = (DeathActive) this

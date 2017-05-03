@@ -16,15 +16,16 @@
 
 package ww.Roles
 
-import ww.Parameters
 import ww.Player
 import ww.SetupActive
 import ww.Utilities
 
 class VirginiaWoolf extends Player implements SetupActive {
 
-    VirginiaWoolf(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, -2)
+    VirginiaWoolf() {
+        super()
+        this.weight = -2
+        this.playerName = 'Virginia Woolf';
     }
 
     @Override

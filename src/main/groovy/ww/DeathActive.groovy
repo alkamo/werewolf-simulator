@@ -17,5 +17,5 @@
 package ww
 
 interface DeathActive {
-    void onDeath(Game.TurnType turnType)
+    void onDeath(GameState.TurnType turnType)
 }

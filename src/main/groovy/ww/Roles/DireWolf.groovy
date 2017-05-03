@@ -20,8 +20,13 @@ import ww.*
 
 class DireWolf extends Player implements SetupActive {
 
-    DireWolf(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -4, true)
+    DireWolf() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.identity = Identity.WEREWOLF
+        this.weight = -4
+        this.preventsVillageWin = true
+        this.playerName = 'Dire Wolf';
     }
 
     @Override

@@ -1,22 +1,32 @@
 package ww.Roles
 
 import spock.lang.Specification
-import ww.Game
+import ww.GameState
 import ww.NightState
 import ww.Parameters
 import ww.Player
-
+import ww.Role
+import ww.RoleSet
+import ww.Team
+import ww.TeamType
 
 class SeerSpec extends Specification {
+    List<? extends Player> players
+    Map<TeamType, ? extends Team> teams
+    Parameters parameters
+    def setup() {
+        players = []
+        teams = [:]
+        parameters = new Parameters()
+    }
+
     def "NightAction"() {
         setup:
-        Parameters parameters = new Parameters()
         parameters.seerClearPattern = Parameters.SeerClearPattern.RANDOM
-        List<Player> players = []
-        players.add(new Seer(parameters, players))
-        players.add(new Werewolf(parameters, players))
-        Seer seer = (Seer) players[0]
-        NightState nightState = new NightState(5)
+        RoleSet roleSet = new RoleSet([(Role.SEER):1, (Role.WEREWOLF):1])
+        roleSet.setupPlayersAndTeams(parameters, players, teams)
+        Seer seer = (Seer) players.find{it instanceof Seer}
+        NightState nightState = new NightState(5, parameters, players, teams)
         when:
         seer.nightAction(nightState)
         then:
@@ -28,12 +38,12 @@ class SeerSpec extends Specification {
         setup:
         Parameters parameters = new Parameters()
         List<Player> players = []
-        players.add(new Seer(parameters, players))
-        players.add(new ApprenticeSeer(parameters, players))
-        Seer seer = (Seer) players[0]
-        ApprenticeSeer appSeer = (ApprenticeSeer) players[1]
+        RoleSet roleSet = new RoleSet([(Role.SEER):1, (Role.APPRENTICE_SEER):1])
+        roleSet.setupPlayersAndTeams(parameters, players, teams)
+        Seer seer = (Seer) players.find{it instanceof Seer}
+        ApprenticeSeer appSeer = (ApprenticeSeer) players.find{it instanceof ApprenticeSeer}
         when:
-        seer.onDeath(Game.TurnType.DAY)
+        seer.onDeath(GameState.TurnType.DAY)
         then:
         appSeer.active
     }

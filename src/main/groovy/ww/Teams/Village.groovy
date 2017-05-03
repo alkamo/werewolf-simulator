@@ -19,13 +19,14 @@ package ww.Teams
 import ww.*
 
 class Village extends Team implements WinCondition {
-    Village(Parameters parameters, List<? extends Player> players) {
-        super(TeamType.VILLAGE, parameters, players)
+    Village() {
+        super()
+        this.teamType = TeamType.VILLAGE;
     }
 
     @Override
     Boolean checkForWin() {
-        return (players.findAll { it.role.preventsVillageWin && it.alive }.size() == 0
+        return (players.findAll { it.preventsVillageWin && it.alive }.size() == 0
                 && getLivePlayersOnTeam().size() > 0)
     }
 }

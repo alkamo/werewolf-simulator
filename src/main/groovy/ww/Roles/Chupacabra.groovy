@@ -21,8 +21,11 @@ import ww.Teams.Solo
 
 class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightActive {
 
-    Chupacabra(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, 4, true)
+    Chupacabra() {
+        super()
+        this.teamType = TeamType.SOLO
+        this.weight = 4
+        this.preventsVillageWin = true
     }
 
     @Override

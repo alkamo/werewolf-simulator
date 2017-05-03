@@ -20,8 +20,12 @@ import ww.*
 
 class Sorceress extends Player implements NightActive {
 
-    Sorceress(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.VILLAGER, -3, false)
+    Sorceress() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.identity = Identity.VILLAGER
+        this.weight = -3
+        this.preventsVillageWin = true
     }
 
     @Override

@@ -20,14 +20,53 @@ package ww
 abstract class GameState {
     List<KillChoice> playersToBeKilled = []
     Integer cycleNumber
+    Parameters parameters
+    TurnType turnType
+    protected List<? extends Player> players
+    protected Map<TeamType, ? extends Team> teams
 
-    GameState(Integer cycleNumber) {
+    enum TurnType {
+        DAY,
+        NIGHT
+    }
+
+    GameState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         this.cycleNumber = cycleNumber
+        this.parameters = parameters
+        this.players = players
+        this.teams = teams
+    }
+
+    void addTeamKill(Player player, Team killedBy) {
+        playersToBeKilled.add(new KillChoice(player, killedBy, this))
+    }
+
+    void addPlayerKill(Player player, Player killedBy) {
+        playersToBeKilled.add(new KillChoice(player, killedBy, this))
     }
 
     void killSelectedPlayers() {
-        playersToBeKilled.each{Player player
-            player.kill()
+        playersToBeKilled.each{KillChoice choice ->
+            choice.kill()
+        }
+    }
+
+    void removeKill(Player player) {
+        playersToBeKilled.remove(playersToBeKilled.find{it.playerToBeKilled == player})
+    }
+
+    abstract getNextState()
+
+    abstract execute()
+
+    void shareKnowledge() {
+        List<? extends Player> livePlayers = players
+                .findAll { it.alive && it.identityKnownBy.size() != 0 }
+        livePlayers.each { player ->
+            player.shareKnowledge()
+        }
+        teams.each { teamType, team ->
+            team.shareKnowledge()
         }
     }
 }

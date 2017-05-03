@@ -16,40 +16,15 @@
 
 package ww
 
-import java.lang.reflect.Constructor
-
-
 class Game {
-    private Parameters parameters = new Parameters()
-    private Integer day = 0
+    private Parameters parameters
+    private RoleSet roleSet
     private List<? extends Player> players = []
     private Map<TeamType, ? extends Team> teams = [:]
 
-    enum TurnType {
-        DAY,
-        NIGHT
-    }
-
-    Game(Parameters parameters) {
+    Game(Parameters parameters, RoleSet roleSet) {
         this.parameters = parameters
-        setupPlayers()
-        setupActions()
-    }
-
-    void setupPlayers(){
-        parameters.roles.each() { Role role, Integer quantity ->
-            quantity.times {
-                Constructor<? extends Player> playerConstructor = role.roleClass.getConstructor();
-                Player newPlayer = playerConstructor.newInstance(parameters, players)
-                players.add(newPlayer)
-                if (!teams.containsKey(newPlayer.teamType)) {
-                    Constructor<? extends Team> teamConstructor = newPlayer.teamType.teamClass.getConstructor();
-                    teams[newPlayer.teamType] = teamConstructor.newInstance()
-                }
-                newPlayer.team = teams[newPlayer.teamType]
-            }
-        }
-        Collections.shuffle(players)
+        this.roleSet = roleSet
     }
 
     void setupActions() {
@@ -57,6 +32,7 @@ class Game {
         setupActors.addAll((List<? extends SetupActive>) players
                 .findAll { it.alive && it instanceof SetupActive })
         setupActors.addAll((List<? extends SetupActive>) teams
+                .values()
                 .findAll { it instanceof SetupActive })
         setupActors.each { player ->
             player.onGameSetup()
@@ -64,57 +40,31 @@ class Game {
     }
 
     void play() {
-        Integer cycleNumber = 1
+        this.roleSet.setupPlayersAndTeams(parameters, players, teams)
+        setupActions()
+        GameState currentState = new NightState(0, parameters, players, teams)
+        currentState.execute()
         while (!hasSomeoneWon()) {
-            day(cycleNumber)
-            if (!hasSomeoneWon()) {
-                night(cycleNumber)
-            }
-            cycleNumber += 1
+            currentState = currentState.getNextState()
+            currentState.execute()
         }
-    }
-
-    void day(Integer dayNumber) {
-        DayState dayState = new DayState(dayNumber)
-        lynch(dayState)
-        List<? extends DayActive> dayActors = []
-        dayActors.addAll((List<? extends DayActive>) players
-                .findAll { it.alive && it instanceof NightActive })
-        dayActors.addAll((List<? extends DayActive>) teams
-                .findAll { it instanceof DayActive })
-        dayActors.each { player ->
-            player.dayAction(dayState)
-        }
-        shareKnowledge()
-    }
-
-    void night(Integer nightNumber) {
-        NightState nightState = new NightState(nightNumber)
-        List<? extends NightActive> nightActors = []
-        nightActors.addAll((List<? extends NightActive>) players
-                .findAll { it.alive && it instanceof NightActive })
-        nightActors.addAll((List<? extends NightActive>) teams
-                .findAll { it instanceof NightActive })
-        nightActors.each { player ->
-            player.nightAction(nightState)
-        }
-        shareKnowledge()
-    }
-
-    void shareKnowledge() {
-        List<? extends Player> livePlayers = players
-                .findAll { it.alive && it.identityKnownBy.size() != 0 }
-        livePlayers.each { player ->
-            player.shareKnowledge()
-        }
-        teams.each { teamType, team ->
-            team.shareKnowledge()
-        }
+        whoWon()
     }
 
     Boolean hasSomeoneWon() {
-        Boolean teamWon = teams.findAll { it instanceof WinCondition && it.checkForWinCondition } > 0
-        Boolean playerWon = teams.findAll { it instanceof WinCondition && it.checkForWinCondition } > 0
+        Boolean teamWon = teams.values().findAll { (it instanceof WinCondition && it.checkForWin()) }.size() > 0
+        Boolean playerWon = players.findAll { it instanceof WinCondition && it.checkForWin() }.size() > 0
         return teamWon || playerWon
+    }
+
+    void whoWon() {
+        teams.values().findAll { (it instanceof WinCondition && it.checkForWin()) }.each{
+            Team team ->
+                System.out.println(team.teamName)
+        }
+        players.findAll { it instanceof WinCondition && it.checkForWin() }.each{
+            Player player ->
+                System.out.println(player.playerName)
+        }
     }
 }

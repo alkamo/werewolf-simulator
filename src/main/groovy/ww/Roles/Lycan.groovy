@@ -23,7 +23,9 @@ import ww.TeamType
 
 class Lycan extends Player {
 
-    Lycan(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.VILLAGE, Identity.WEREWOLF, -1, false)
+    Lycan() {
+        super()
+        this.identity = Identity.WEREWOLF
+        this.weight = -1
     }
 }

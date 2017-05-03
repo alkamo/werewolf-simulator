@@ -16,16 +16,20 @@
 
 package ww.Roles
 
-import ww.*
+import ww.DeathActive
+import ww.GameState
+import ww.NotYetImplementedPlayer
 
 class DrBoom extends NotYetImplementedPlayer implements DeathActive {
 
-    DrBoom(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, -2)
+    DrBoom() {
+        super()
+        this.weight = -2
+        this.playerName = 'Dr. Boom';
     }
 
     @Override
-    void onDeath(Game.TurnType turnType) {
+    void onDeath(GameState.TurnType turnType) {
 
     }
 }

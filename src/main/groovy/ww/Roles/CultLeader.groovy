@@ -17,14 +17,17 @@
 package ww.Roles
 
 import ww.*
-import ww.Teams.Solo
 
 class CultLeader extends Player implements NightActive, WinCondition {
 
     List<? extends Player> cultists = [this]
 
-    CultLeader(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.SOLO, Identity.VILLAGER, 1, true)
+    CultLeader() {
+        super()
+        this.teamType = TeamType.SOLO
+        this.weight = 1
+        this.preventsVillageWin = true
+        this.playerName = 'Cult Leader';
     }
 
     @Override

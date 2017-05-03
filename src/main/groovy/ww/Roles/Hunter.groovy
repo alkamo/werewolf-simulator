@@ -20,12 +20,13 @@ import ww.*
 
 class Hunter extends NotYetImplementedPlayer implements DeathActive {
 
-    Hunter(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
+    Hunter() {
+        super()
+        this.weight = 3
     }
 
     @Override
-    void onDeath(Game.TurnType turnType) {
+    void onDeath(GameState.TurnType turnType) {
         List<? extends Player> potentialKills = players.findAll {
             Player player ->
                 alive && identityKnownBy.contains(this) && getIdentity() == Identity.WEREWOLF

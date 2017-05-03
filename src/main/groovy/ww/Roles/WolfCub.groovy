@@ -20,12 +20,17 @@ import ww.*
 
 class WolfCub extends NotYetImplementedPlayer implements DeathActive {
 
-    WolfCub(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, TeamType.WEREWOLF, Identity.WEREWOLF, -8, true)
+    WolfCub() {
+        super()
+        this.teamType = TeamType.WEREWOLF
+        this.identity = Identity.WEREWOLF
+        this.weight = -8
+        this.preventsVillageWin = true
+        this.playerName = 'Wolf Cub';
     }
 
     @Override
-    void onDeath(Game.TurnType turnType) {
+    void onDeath(GameState.TurnType turnType) {
 
     }
 }

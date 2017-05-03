@@ -24,8 +24,9 @@ import ww.Player
 
 class Revealer extends NotYetImplementedPlayer implements NightActive {
 
-    Revealer(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 4)
+    Revealer() {
+        super()
+        this.weight = 4
     }
 
     @Override

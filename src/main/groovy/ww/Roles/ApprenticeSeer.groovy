@@ -17,15 +17,14 @@
 package ww.Roles
 
 import ww.NightState
-import ww.Parameters
-import ww.Player
 
 class ApprenticeSeer extends Seer {
     Boolean active = false
 
-    ApprenticeSeer(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players)
+    ApprenticeSeer() {
+        super()
         weight = 4
+        this.playerName = 'Apprentice Seer';
     }
 
     @Override

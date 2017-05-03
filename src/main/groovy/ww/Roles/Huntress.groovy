@@ -22,8 +22,9 @@ class Huntress extends Player implements NightActive {
 
     Boolean shotUsed = false
 
-    Huntress(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, 3)
+    Huntress() {
+        super()
+        this.weight = 3
     }
 
     @Override
@@ -39,10 +40,7 @@ class Huntress extends Player implements NightActive {
                         alive && !identityKnownBy.contains(this) && player != this
                 }
             }
-            nightState.playersToBeKilled.add(
-                    new KillChoice(
-                            playerToBeKilled: (Player) Utilities.pickRandomElement(potentialKills),
-                            killedByPlayer: this))
+            nightState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
         }
     }
 

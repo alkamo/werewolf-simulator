@@ -24,8 +24,9 @@ import ww.Player
 
 class Troublemaker extends NotYetImplementedPlayer implements NightActive {
 
-    Troublemaker(Parameters parameters, List<? extends Player> players) {
-        super(parameters, players, -3)
+    Troublemaker() {
+        super()
+        this.weight = -3
     }
 
     @Override

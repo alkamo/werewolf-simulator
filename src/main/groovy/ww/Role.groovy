@@ -22,7 +22,7 @@ enum Role {
     BODYGUARD(Bodyguard.class),
     BLOB(Blob.class),
     WITCH(Witch.class),
-    SEER(WolfCub.class),
+    SEER(Seer.class),
     APPRENTICE_SEER(ApprenticeSeer.class),
     HUNTRESS(Huntress.class),
     CHUPACABRA(Chupacabra.class),
