@@ -17,8 +17,7 @@
 package ww.Roles
 
 import ww.Identity
-import ww.Parameters
-import ww.Player
+import ww.Actors.Player
 import ww.TeamType
 
 class Werewolf extends Player {

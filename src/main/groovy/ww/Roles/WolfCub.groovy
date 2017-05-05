@@ -16,21 +16,21 @@
 
 package ww.Roles
 
-import ww.*
+import ww.Actors.DeathActive
+import ww.States.GameState
+import ww.Actors.NotYetImplementedPlayer
 
 class WolfCub extends NotYetImplementedPlayer implements DeathActive {
+    //Will extend werewolf
 
     WolfCub() {
         super()
-        this.teamType = TeamType.WEREWOLF
-        this.identity = Identity.WEREWOLF
         this.weight = -8
-        this.preventsVillageWin = true
         this.name = 'Wolf Cub';
     }
 
     @Override
-    void onDeath(GameState.TurnType turnType) {
+    void onDeath(GameState gameState) {
 
     }
 }

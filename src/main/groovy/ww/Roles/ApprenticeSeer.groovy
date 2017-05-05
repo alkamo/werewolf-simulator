@@ -16,7 +16,7 @@
 
 package ww.Roles
 
-import ww.NightState
+import ww.States.NightState
 
 class ApprenticeSeer extends Seer {
     Boolean active = false

@@ -17,6 +17,10 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.NotYetImplementedPlayer
+import ww.States.GameState
+import ww.States.NightState
 
 class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightActive {
 
@@ -38,12 +42,12 @@ class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightA
     }
 
     @Override
-    Boolean checkForWin() {
-        return (alive && players.findAll { alive }.size() == 1)
+    Boolean checkForWin(GameState gameState) {
+        return (alive && gameState.players.findAll { alive }.size() == 1)
     }
 
     @Override
-    void updateStats(Map<String, Statistic> stats) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin())
+    void updateStats(Map<String, Statistic> stats, GameState gameState) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
     }
 }

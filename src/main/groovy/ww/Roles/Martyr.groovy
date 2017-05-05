@@ -16,11 +16,9 @@
 
 package ww.Roles
 
-import ww.DayActive
-import ww.DayState
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
+import ww.Actors.DayActive
+import ww.States.DayState
+import ww.Actors.NotYetImplementedPlayer
 
 class Martyr extends NotYetImplementedPlayer implements DayActive {
 

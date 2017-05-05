@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
+
+import ww.States.SetupState
 
 interface SetupActive {
-    void onGameSetup()
+    void onGameSetup(SetupState setupState)
 }

@@ -16,9 +16,13 @@
 
 package ww.Roles
 
-import ww.*
+import ww.Actors.DeathActive
+import ww.Actors.Player
+import ww.Identity
+import ww.States.GameState
+import ww.Utilities
 
-class Hunter extends NotYetImplementedPlayer implements DeathActive {
+class Hunter extends Player implements DeathActive {
 
     Hunter() {
         super()
@@ -26,17 +30,19 @@ class Hunter extends NotYetImplementedPlayer implements DeathActive {
     }
 
     @Override
-    void onDeath(GameState.TurnType turnType) {
-        List<? extends Player> potentialKills = players.findAll {
+    void onDeath(GameState gameState) {
+        List<? extends Player> potentialKills = gameState.players.findAll {
             Player player ->
                 alive && identityKnownBy.contains(this) && getIdentity() == Identity.WEREWOLF
         }
         if (potentialKills.size() == 0) {
-            potentialKills = players.findAll {
+            potentialKills = gameState.getOtherLivePlayers(this).findAll {
                 Player player ->
-                    alive && !identityKnownBy.contains(this) && player != this
+                    !player.identityKnownBy.contains(this)
             }
         }
-        Utilities.pickRandomElement(potentialKills).kill(turnType)
+        if (potentialKills.size() > 0) {
+            gameState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
+        }
     }
 }

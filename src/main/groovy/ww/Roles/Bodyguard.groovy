@@ -16,8 +16,9 @@
 
 package ww.Roles
 
-import ww.*
-import ww.Teams.Village
+import ww.Actors.NightActive
+import ww.Actors.NotYetImplementedPlayer
+import ww.States.NightState
 
 class Bodyguard extends NotYetImplementedPlayer implements NightActive {
 

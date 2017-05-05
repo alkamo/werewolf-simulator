@@ -59,12 +59,12 @@ class Simulator {
         iterations.times {
             Parameters parameters = new Parameters()
             Game game = new Game(parameters, roleSet)
-            game.play()
+            game.play(stats)
             games.add(game)
-            game.updateStats(stats)
         }
+        System.out.println(roleSet.name)
         System.out.println('------------------------')
-        stats.each { String key, Statistic value ->
+        stats.sort{e1, e2 -> e1.key <=> e2.key}.each { String key, Statistic value ->
             value.getFormattedFinalValues(iterations).each {
                 System.out.println(it)
             }

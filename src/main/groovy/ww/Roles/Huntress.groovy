@@ -17,6 +17,9 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.Player
+import ww.States.NightState
 
 class Huntress extends Player implements NightActive {
 

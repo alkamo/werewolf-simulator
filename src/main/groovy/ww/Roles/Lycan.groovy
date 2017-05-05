@@ -17,9 +17,7 @@
 package ww.Roles
 
 import ww.Identity
-import ww.Parameters
-import ww.Player
-import ww.TeamType
+import ww.Actors.Player
 
 class Lycan extends Player {
 

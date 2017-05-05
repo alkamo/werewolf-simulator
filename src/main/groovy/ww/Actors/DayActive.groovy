@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
 
-interface NightActive {
-    void nightAction(NightState nightState)
+import ww.States.DayState
 
-    Integer getNightOrder()
+interface DayActive {
+    void dayAction(DayState dayState)
+
+    Integer getDayOrder()
 }

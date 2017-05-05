@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-package ww
+package ww.States
+
+import ww.Actors.DayActive
+import ww.Identity
+import ww.Parameters
+import ww.Actors.Player
+import ww.Actors.Team
+import ww.TeamType
+import ww.Utilities
 
 
 class DayState extends GameState {
@@ -26,12 +34,12 @@ class DayState extends GameState {
     }
 
     @Override
-    def getNextState() {
+    NightState getNextState() {
         return new NightState(cycleNumber, parameters, players, teams)
     }
 
     @Override
-    def execute() {
+    void execute() {
         lynch()
         List<? extends DayActive> dayActors = []
         dayActors.addAll((List<? extends DayActive>) players
@@ -53,11 +61,11 @@ class DayState extends GameState {
     void lynch() {
         lynches.times {
             if (this.dayNumber != 1 || parameters.firstDayLynch) {
-                if (teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()
-                        > teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()) {
+                if (getLivePlayersOnTeam(teams[TeamType.VILLAGE]).size()
+                        > getLivePlayersOnTeam(teams[TeamType.WEREWOLF]).size()) {
                     lynchWerewolf()
-                } else if (teams[TeamType.WEREWOLF].getLivePlayersOnTeam().size()
-                        > teams[TeamType.VILLAGE].getLivePlayersOnTeam().size()) {
+                } else if (getLivePlayersOnTeam(teams[TeamType.WEREWOLF]).size()
+                        > getLivePlayersOnTeam(teams[TeamType.VILLAGE]).size()) {
                     lynchVillager()
                 }
             }
@@ -65,13 +73,13 @@ class DayState extends GameState {
     }
 
     void lynchWerewolf() {
-        List<? extends Player> potentialKills = teams[TeamType.VILLAGE].getLivePlayersKnownToTeam().findAll {
+        List<? extends Player> potentialKills = getLivePlayersKnownToTeam(teams[TeamType.VILLAGE]).findAll {
             Player player ->
                 (player.identity == Identity.WEREWOLF
                         && !playersToBeKilled.contains(player))
         }
         if (potentialKills.size() == 0) {
-            potentialKills = teams[TeamType.VILLAGE].getLivePlayersUnknownToTeam().findAll {
+            potentialKills = getLivePlayersUnknownToTeam(teams[TeamType.VILLAGE]).findAll {
                 Player player ->
                     !playersToBeKilled.contains(player)
             }
@@ -81,7 +89,7 @@ class DayState extends GameState {
     }
 
     void lynchVillager() {
-        List<? extends Player> potentialKills = teams[TeamType.WEREWOLF].getLivePlayersKnownToTeam()
+        List<? extends Player> potentialKills = getLivePlayersKnownToTeam(teams[TeamType.WEREWOLF])
         if (potentialKills.size() == 0) {
             potentialKills = players.findAll {
                 Player player ->

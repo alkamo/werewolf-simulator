@@ -17,6 +17,10 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.Player
+import ww.States.GameState
+import ww.States.NightState
 
 class CultLeader extends Player implements NightActive, WinCondition {
 
@@ -31,13 +35,13 @@ class CultLeader extends Player implements NightActive, WinCondition {
     }
 
     @Override
-    Boolean checkForWin() {
+    Boolean checkForWin(GameState gameState) {
         return players.findAll { alive }.size() == cultists.findAll { alive }.size()
     }
 
     @Override
     void nightAction(NightState nightState) {
-        List<? extends Player> potentialCultists = players.findAll {
+        List<? extends Player> potentialCultists = nightState.players.findAll {
             Player player ->
                 (player.alive && !cultists.contains(player))
         }
@@ -50,7 +54,7 @@ class CultLeader extends Player implements NightActive, WinCondition {
     }
 
     @Override
-    void updateStats(Map<String, Statistic> stats) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin())
+    void updateStats(Map<String, Statistic> stats, GameState gameState) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
     }
 }

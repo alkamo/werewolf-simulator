@@ -16,8 +16,9 @@
 
 package ww.Roles
 
-import ww.Player
-import ww.SetupActive
+import ww.Actors.Player
+import ww.Actors.SetupActive
+import ww.States.SetupState
 import ww.Utilities
 
 class VirginiaWoolf extends Player implements SetupActive {
@@ -29,11 +30,8 @@ class VirginiaWoolf extends Player implements SetupActive {
     }
 
     @Override
-    void onGameSetup() {
-        List<? extends Player> potentialAfraid = players.findAll {
-            Player player ->
-                player != this
-        }
+    void onGameSetup(SetupState setupState) {
+        List<? extends Player> potentialAfraid = setupState.getOtherLivePlayers(this)
         Player afraid = (Player) Utilities.pickRandomElement(potentialAfraid)
         afraid.deathLinks.add(this)
         this.deathLinks.add(afraid)

@@ -16,6 +16,10 @@
 
 package ww
 
+import ww.Actors.Player
+import ww.Actors.Team
+import ww.States.GameState
+
 
 class KillChoice {
     Player playerToBeKilled
@@ -35,7 +39,13 @@ class KillChoice {
         this.gameState = gameState
     }
 
-    void kill() {
-        playerToBeKilled.kill(gameState.turnType)
+    void kill(GameState gameState) {
+        try {
+            playerToBeKilled.kill(gameState)
+        } catch (Exception e) {
+            System.out.println("Team: $killedByTeam")
+            System.out.println("Player: $killedByPlayer")
+            throw e
+        }
     }
 }

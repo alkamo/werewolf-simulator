@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
+
+import ww.States.GameState
 
 interface DeathActive {
-    void onDeath(GameState.TurnType turnType)
+    void onDeath(GameState gameState)
 }

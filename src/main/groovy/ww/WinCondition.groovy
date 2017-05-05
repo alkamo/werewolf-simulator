@@ -16,6 +16,8 @@
 
 package ww
 
+import ww.States.GameState
+
 interface WinCondition extends ProvidesStats {
-    abstract Boolean checkForWin()
+    abstract Boolean checkForWin(GameState gameState)
 }

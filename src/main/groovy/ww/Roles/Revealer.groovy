@@ -16,11 +16,9 @@
 
 package ww.Roles
 
-import ww.NightActive
-import ww.NightState
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
+import ww.Actors.NightActive
+import ww.States.NightState
+import ww.Actors.NotYetImplementedPlayer
 
 class Revealer extends NotYetImplementedPlayer implements NightActive {
 

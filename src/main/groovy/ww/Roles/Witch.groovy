@@ -17,6 +17,10 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.NotYetImplementedPlayer
+import ww.Actors.Player
+import ww.States.NightState
 
 class Witch extends NotYetImplementedPlayer implements NightActive {
     Boolean usedHeal = false
@@ -25,20 +29,17 @@ class Witch extends NotYetImplementedPlayer implements NightActive {
     Witch() {
         super()
         this.weight = 4
+        this.nightOrder
     }
 
     void useKillPotion(NightState nightState) {
         if (!this.usedKill) {
-            List<? extends Player> potentialKills = players.findAll {
+            List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this.team).findAll {
                 Player player ->
-                    (player.alive
-                            && player.identityKnownByTeam.contains(this))
+                    player.identity == Identity.WEREWOLF
             }
             if (potentialKills.size() == 0) {
-                potentialKills = players.findAll {
-                    Player player ->
-                        player.alive && player != this
-                }
+                potentialKills = nightState.getOtherLivePlayers(this)
             }
             nightState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
             this.usedKill = true

@@ -17,6 +17,9 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.Player
+import ww.States.NightState
 
 class Sorceress extends Player implements NightActive {
 
@@ -30,14 +33,14 @@ class Sorceress extends Player implements NightActive {
 
     @Override
     void nightAction(NightState nightState) {
-        List<? extends Player> potentialLooks = players.findAll {
+        List<? extends Player> potentialLooks = nightState.getLivePlayersNotOnTeam(this.team).findAll {
             Player player ->
-                (alive
-                        && !identityKnownBy.contains(this)
-                        && player != this
-                        && team != this.team)
+                (!identityKnownBy.contains(this))
         }
-        (Player) Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
+        Player pickedPlayer = Utilities.pickRandomElement(potentialLooks)
+        if (pickedPlayer != null) {
+            pickedPlayer.identityKnownBy.add(this)
+        }
     }
 
     @Override

@@ -16,20 +16,66 @@
 
 package ww
 
+import ww.Actors.Player
+import ww.Actors.Team
+
 
 class RoleSet {
     enum Predefined {
         BASIC_7(
                 [(Role.VILLAGER): 6,
                  (Role.WEREWOLF): 1]),
+        STANDARD_6(
+                [(Role.VILLAGER): 4,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 1]),
+        STANDARD_7(
+                [(Role.VILLAGER): 5,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 1]),
+        STANDARD_8(
+                [(Role.VILLAGER): 6,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 1]),
         STANDARD_9(
+                [(Role.VILLAGER): 6,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 2]),
+        STANDARD_10(
                 [(Role.VILLAGER): 7,
                  (Role.SEER)    : 1,
                  (Role.WEREWOLF): 2]),
+        STANDARD_11(
+                [(Role.VILLAGER): 8,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 2]),
+        STANDARD_12(
+                [(Role.VILLAGER): 8,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 3]),
+        STANDARD_13(
+                [(Role.VILLAGER): 9,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 3]),
+        STANDARD_14(
+                [(Role.VILLAGER): 10,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 3]),
+        STANDARD_15(
+                [(Role.VILLAGER): 11,
+                 (Role.SEER)    : 1,
+                 (Role.WEREWOLF): 3]),
         BASIC_AND_TANNER_11(
                 [(Role.VILLAGER): 9,
                  (Role.TANNER)  : 1,
-                 (Role.WEREWOLF): 1])
+                 (Role.WEREWOLF): 1]),
+        UNCERTAINTY_10(
+                [(Role.VILLAGER) : 5,
+                 (Role.WEREWOLF) : 1,
+                 (Role.SEER)     : 1,
+                 (Role.SORCERESS): 1,
+                 (Role.LYCAN)    : 1,
+                 (Role.HUNTER)   : 1])
 
         Map<Role, Integer> roleMap
 
@@ -38,27 +84,28 @@ class RoleSet {
         }
     }
 
+    String name
     Map<Role, Integer> roleMap = [:]
 
-    RoleSet(Map<Role, Integer> roleMap) {
+    RoleSet(String name, Map<Role, Integer> roleMap) {
+        this.name = name
         this.roleMap << roleMap
     }
 
-    RoleSet(Predefined predefinedRoleList) {
-        this.roleMap << predefinedRoleList.roleMap
+    RoleSet(Predefined predefinedRoleSet) {
+        this.name = predefinedRoleSet.name()
+        this.roleMap << predefinedRoleSet.roleMap
     }
 
     void setupPlayersAndTeams(Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         roleMap.each() { Role role, Integer quantity ->
             quantity.times {
                 Player newPlayer = (Player) role.roleClass.newInstance()
-                newPlayer.players = players
                 newPlayer.parameters = parameters
                 players.add(newPlayer)
                 if (!teams.containsKey(newPlayer.teamType)) {
                     Team newTeam = (Team) newPlayer.teamType.teamClass.newInstance()
                     newTeam.parameters = parameters
-                    newTeam.players = players
                     teams[newPlayer.teamType] = newTeam
                 }
                 newPlayer.team = teams[newPlayer.teamType]

@@ -16,6 +16,8 @@
 
 package ww
 
+import ww.States.GameState
+
 interface ProvidesStats {
-    void updateStats(Map<String, Statistic> stats)
+    void updateStats(Map<String, Statistic> stats, GameState gameState)
 }

@@ -17,6 +17,11 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.DeathActive
+import ww.Actors.NightActive
+import ww.Actors.Player
+import ww.States.GameState
+import ww.States.NightState
 
 class Seer extends Player implements NightActive, DeathActive {
 
@@ -30,9 +35,9 @@ class Seer extends Player implements NightActive, DeathActive {
     void nightAction(NightState nightState) {
         switch (parameters.seerClearPattern) {
             case Parameters.SeerClearPattern.RANDOM:
-                List<? extends Player> potentialLooks = players.findAll {
+                List<? extends Player> potentialLooks = nightState.getOtherLivePlayers(this).findAll {
                     Player player ->
-                        player.alive && !player.identityKnownBy.contains(this) && player != this
+                        !player.identityKnownBy.contains(this)
                 }
                 Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
                 break;
@@ -47,8 +52,8 @@ class Seer extends Player implements NightActive, DeathActive {
     }
 
     @Override
-    void onDeath(GameState.TurnType turnType) {
-        List<? extends Player> appSeers = players.findAll { Player player ->
+    void onDeath(GameState gameState) {
+        List<? extends Player> appSeers = gameState.players.findAll { Player player ->
             (player instanceof ApprenticeSeer
                     && !player.active)
         }

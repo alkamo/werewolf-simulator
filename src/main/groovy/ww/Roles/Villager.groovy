@@ -16,10 +16,7 @@
 
 package ww.Roles
 
-import ww.Identity
-import ww.Parameters
-import ww.Player
-import ww.Teams.Village
+import ww.Actors.Player
 
 class Villager extends Player {
 

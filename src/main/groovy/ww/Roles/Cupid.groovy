@@ -16,11 +16,9 @@
 
 package ww.Roles
 
-import ww.Identity
-import ww.Parameters
-import ww.Player
-import ww.SetupActive
-import ww.Teams.Village
+import ww.Actors.Player
+import ww.Actors.SetupActive
+import ww.States.SetupState
 import ww.Utilities
 
 class Cupid extends Player implements SetupActive {
@@ -31,11 +29,8 @@ class Cupid extends Player implements SetupActive {
     }
 
     @Override
-    void onGameSetup() {
-        List<? extends Player> potentialLovers = players.findAll {
-            Player player ->
-                player != this
-        }
+    void onGameSetup(SetupState setupState) {
+        List<? extends Player> potentialLovers = setupState.getOtherLivePlayers(this)
         Player lover1 = (Player) Utilities.pickRandomElement(potentialLovers)
         potentialLovers.remove(lover1)
         Player lover2 = (Player) Utilities.pickRandomElement(potentialLovers)

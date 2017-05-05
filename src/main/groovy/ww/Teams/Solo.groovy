@@ -17,6 +17,7 @@
 package ww.Teams
 
 import ww.*
+import ww.Actors.Team
 
 class Solo extends Team {
     Solo() {

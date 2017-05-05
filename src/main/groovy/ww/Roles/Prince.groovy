@@ -16,12 +16,9 @@
 
 package ww.Roles
 
-import ww.DeathActive
-import ww.Game
-import ww.GameState
-import ww.NotYetImplementedPlayer
-import ww.Parameters
-import ww.Player
+import ww.Actors.DeathActive
+import ww.States.GameState
+import ww.Actors.NotYetImplementedPlayer
 
 class Prince extends NotYetImplementedPlayer implements DeathActive {
 
@@ -31,7 +28,7 @@ class Prince extends NotYetImplementedPlayer implements DeathActive {
     }
 
     @Override
-    void onDeath(GameState.TurnType turnType) {
+    void onDeath(GameState gameState) {
 
     }
 }

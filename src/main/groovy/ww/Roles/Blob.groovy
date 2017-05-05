@@ -17,6 +17,11 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.NightActive
+import ww.Actors.NotYetImplementedPlayer
+import ww.Actors.Player
+import ww.States.GameState
+import ww.States.NightState
 
 class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition {
 
@@ -40,12 +45,12 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
     }
 
     @Override
-    Boolean checkForWin() {
-        return players.findAll { alive }.size() == blob.findAll { alive }.size()
+    Boolean checkForWin(GameState gameState) {
+        return gameState.players.findAll { alive }.size() == blob.findAll { alive }.size()
     }
 
     @Override
-    void updateStats(Map<String, Statistic> stats) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin())
+    void updateStats(Map<String, Statistic> stats, GameState gameState) {
+        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
     }
 }

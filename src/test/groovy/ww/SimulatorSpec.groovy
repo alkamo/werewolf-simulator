@@ -16,26 +16,23 @@
 
 package ww
 
+import org.junit.Rule
+import org.junit.rules.TestName
 import spock.lang.Specification
+import spock.lang.Unroll
 
 
 class SimulatorSpec extends Specification {
-    def "Main - Basic(1000)"() {
+    @Rule TestName name = new TestName()
+
+    @Unroll
+    def "Main - #roleSet.name() - 200"() {
         setup:
-        String[] args = ['-i 200']
+        System.out.println(name.methodName)
+        String[] args = ['-i 200', "-r ${roleSet.name()}"]
         expect:
         Simulator.main(args)
-    }
-    def "Main - Basic_Tanner(1000)"() {
-        setup:
-        String[] args = ['-i 200','-r BASIC_AND_TANNER_11']
-        expect:
-        Simulator.main(args)
-    }
-    def "Main - Standard(1000)"() {
-        setup:
-        String[] args = ['-i 200','-r STANDARD_9']
-        expect:
-        Simulator.main(args)
+        where:
+        roleSet << RoleSet.Predefined.values()
     }
 }

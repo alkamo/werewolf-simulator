@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package ww
+package ww.States
+
+import ww.Actors.NightActive
+import ww.Parameters
+import ww.Actors.Player
+import ww.Actors.Team
+import ww.TeamType
 
 
 class NightState extends GameState {
@@ -26,12 +32,12 @@ class NightState extends GameState {
     }
 
     @Override
-    def getNextState() {
+    DayState getNextState() {
         return new DayState(cycleNumber + 1, parameters, players, teams)
     }
 
     @Override
-    def execute() {
+    void execute() {
         List<? extends NightActive> nightActors = []
         nightActors.addAll((List<? extends NightActive>) players
                 .findAll { it.alive && it instanceof NightActive })

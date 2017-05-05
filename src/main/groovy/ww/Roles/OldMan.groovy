@@ -16,9 +16,9 @@
 
 package ww.Roles
 
-import ww.NightActive
-import ww.NightState
-import ww.NotYetImplementedPlayer
+import ww.Actors.NightActive
+import ww.States.NightState
+import ww.Actors.NotYetImplementedPlayer
 
 class OldMan extends NotYetImplementedPlayer implements NightActive {
 

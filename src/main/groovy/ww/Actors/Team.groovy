@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
+
+import ww.Parameters
+import ww.States.GameState
+import ww.TeamType
 
 abstract class Team {
     TeamType teamType
-    List<? extends Player> players
     Parameters parameters
     String name
 
@@ -26,29 +29,13 @@ abstract class Team {
         this.name = this.getClass().getSimpleName()
     }
 
-    public void shareKnowledge() {
-        getLivePlayersOnTeam().each{teamPlayer ->
-            getLivePlayersKnownToTeam().each{ knownPlayer ->
+    public void shareKnowledge(GameState gameState) {
+        gameState.getLivePlayersOnTeam(this).each { teamPlayer ->
+            gameState.getLivePlayersKnownToTeam(this).each { knownPlayer ->
                 if (!knownPlayer.identityKnownBy.contains(teamPlayer)) {
                     knownPlayer.identityKnownBy.add(teamPlayer)
                 }
             }
         }
-    }
-
-    List<? extends Player> getLivePlayersOnTeam() {
-        return players.findAll { it.teamType == this.teamType && it.alive }
-    }
-
-    List<? extends Player> getLivePlayersNotOnTeam() {
-        return players.findAll { it.teamType != this.teamType && it.alive }
-    }
-
-    List<? extends Player> getLivePlayersKnownToTeam() {
-        return players.findAll { it.alive && it.identityKnownByTeam.contains(this) }
-    }
-
-    List<? extends Player> getLivePlayersUnknownToTeam() {
-        return players.findAll { it.alive && !it.identityKnownByTeam.contains(this) }
     }
 }

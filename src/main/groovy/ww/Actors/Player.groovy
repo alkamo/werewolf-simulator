@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
+
+import ww.Identity
+import ww.Parameters
+import ww.States.GameState
+import ww.TeamType
 
 abstract class Player {
     Boolean alive = true
@@ -22,7 +27,6 @@ abstract class Player {
     List<? extends Player> identityKnownBy = []
     List<? extends Team> identityKnownByTeam = []
     Parameters parameters
-    List<? extends Player> players
     List<? extends Player> deathLinks = []
     Team team
     String name
@@ -36,15 +40,17 @@ abstract class Player {
         this.name = this.getClass().getSimpleName()
     }
 
-    void kill(GameState.TurnType turnType) {
-        this.alive = false
-        if (this instanceof DeathActive) {
-            DeathActive deathPlayer = (DeathActive) this
-            deathPlayer.onDeath(turnType)
-        }
-        if (!alive) {
-            deathLinks.each { Player player ->
-                player.kill(turnType)
+    void kill(GameState gameState) {
+        if (alive) {
+            this.alive = false
+            if (this instanceof DeathActive) {
+                DeathActive deathPlayer = (DeathActive) this
+                deathPlayer.onDeath(gameState)
+            }
+            if (!alive) {
+                deathLinks.each { Player player ->
+                    player.kill(gameState)
+                }
             }
         }
     }
@@ -53,7 +59,7 @@ abstract class Player {
         return identityOverride ?: identity
     }
 
-    void shareKnowledge() {
+    void shareKnowledge(GameState gameState) {
         identityKnownBy.each { Player player ->
             if (player.team.teamType != TeamType.SOLO && !identityKnownByTeam.contains(player.team)) {
                 identityKnownByTeam.add(player.team)

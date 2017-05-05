@@ -1,13 +1,12 @@
 package ww.Roles
 
 import spock.lang.Specification
-import ww.GameState
-import ww.NightState
+import ww.States.NightState
 import ww.Parameters
-import ww.Player
+import ww.Actors.Player
 import ww.Role
 import ww.RoleSet
-import ww.Team
+import ww.Actors.Team
 import ww.TeamType
 
 class SeerSpec extends Specification {
@@ -23,7 +22,7 @@ class SeerSpec extends Specification {
     def "NightAction"() {
         setup:
         parameters.seerClearPattern = Parameters.SeerClearPattern.RANDOM
-        RoleSet roleSet = new RoleSet([(Role.SEER):1, (Role.WEREWOLF):1])
+        RoleSet roleSet = new RoleSet('Seer NightAction Test', [(Role.SEER):1, (Role.WEREWOLF):1])
         roleSet.setupPlayersAndTeams(parameters, players, teams)
         Seer seer = (Seer) players.find{it instanceof Seer}
         NightState nightState = new NightState(5, parameters, players, teams)
@@ -38,12 +37,13 @@ class SeerSpec extends Specification {
         setup:
         Parameters parameters = new Parameters()
         List<Player> players = []
-        RoleSet roleSet = new RoleSet([(Role.SEER):1, (Role.APPRENTICE_SEER):1])
+        RoleSet roleSet = new RoleSet('Seer OnDeath Test', [(Role.SEER):1, (Role.APPRENTICE_SEER):1])
         roleSet.setupPlayersAndTeams(parameters, players, teams)
         Seer seer = (Seer) players.find{it instanceof Seer}
         ApprenticeSeer appSeer = (ApprenticeSeer) players.find{it instanceof ApprenticeSeer}
+        NightState nightState = new NightState(5, parameters, players, teams)
         when:
-        seer.onDeath(GameState.TurnType.DAY)
+        seer.onDeath(nightState)
         then:
         appSeer.active
     }

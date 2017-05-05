@@ -16,16 +16,26 @@
 
 package ww.Roles
 
-import ww.*
+import ww.Actors.NightActive
+import ww.Actors.NotYetImplementedPlayer
+import ww.States.NightState
 
-class BigBadWolf extends NotYetImplementedPlayer {
+class BigBadWolf extends NotYetImplementedPlayer implements NightActive {
+    //Will extend werewolf
 
     BigBadWolf() {
         super()
-        this.teamType = TeamType.WEREWOLF
-        this.identity = Identity.WEREWOLF
         this.weight = -9
-        this.preventsVillageWin = true
         this.name = 'Big Bad Wolf';
+    }
+
+    @Override
+    void nightAction(NightState nightState) {
+
+    }
+
+    @Override
+    Integer getNightOrder() {
+        return 2
     }
 }

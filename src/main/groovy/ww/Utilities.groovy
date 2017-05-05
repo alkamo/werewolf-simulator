@@ -21,13 +21,19 @@ import java.math.RoundingMode
 
 class Utilities {
     public static final def pickRandomElement(List<?> listToPick) {
-        Integer pick
+        Integer pickIndex
+        def pick
         if (listToPick.size() > 1) {
-            pick = new Random().nextInt(listToPick.size())
+            pickIndex = new Random().nextInt(listToPick.size())
         } else {
-            pick = 0
+            pickIndex = 0
         }
-        return listToPick.get(pick)
+        if (listToPick.size() == 0 ) {
+            pick = null
+        } else {
+            pick = listToPick.get(pickIndex)
+        }
+        return pick
     }
 
     public static

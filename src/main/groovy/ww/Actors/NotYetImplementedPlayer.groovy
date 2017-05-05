@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
+
+import ww.Identity
+import ww.Parameters
+import ww.TeamType
 
 abstract class NotYetImplementedPlayer extends Player {
 

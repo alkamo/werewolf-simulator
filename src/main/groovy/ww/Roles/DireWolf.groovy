@@ -17,21 +17,21 @@
 package ww.Roles
 
 import ww.*
+import ww.Actors.Player
+import ww.Actors.SetupActive
+import ww.States.SetupState
 
-class DireWolf extends Player implements SetupActive {
+class DireWolf extends Werewolf implements SetupActive {
 
     DireWolf() {
         super()
-        this.teamType = TeamType.WEREWOLF
-        this.identity = Identity.WEREWOLF
         this.weight = -4
-        this.preventsVillageWin = true
         this.name = 'Dire Wolf';
     }
 
     @Override
-    void onGameSetup() {
-        List<? extends Player> potentialCompanion = players.findAll {
+    void onGameSetup(SetupState setupState) {
+        List<? extends Player> potentialCompanion = setupState.players.findAll {
             Player player ->
                 (player != this
                         && player.identity != Identity.WEREWOLF)
