@@ -41,7 +41,13 @@ class KillChoice {
 
     void kill(GameState gameState) {
         try {
-            playerToBeKilled.kill(gameState)
+            if (killedByPlayer != null) {
+                playerToBeKilled.kill(gameState, killedByPlayer)
+            } else if (killedByTeam != null) {
+                playerToBeKilled.kill(gameState, killedByTeam)
+            } else {
+                playerToBeKilled.kill(gameState)
+            }
         } catch (Exception e) {
             System.out.println("Team: $killedByTeam")
             System.out.println("Player: $killedByPlayer")

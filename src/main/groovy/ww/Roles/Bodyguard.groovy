@@ -17,10 +17,17 @@
 package ww.Roles
 
 import ww.Actors.NightActive
-import ww.Actors.NotYetImplementedPlayer
+import ww.Actors.Player
+import ww.Identity
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.NightState
+import ww.Statistic
+import ww.StatisticCollector
+import ww.Utilities
 
-class Bodyguard extends NotYetImplementedPlayer implements NightActive {
+class Bodyguard extends Player implements NightActive, ProvidesStats {
+    List<? extends Player> savedPlayers = []
 
     Bodyguard() {
         super()
@@ -29,11 +36,27 @@ class Bodyguard extends NotYetImplementedPlayer implements NightActive {
 
     @Override
     void nightAction(NightState nightState) {
-
+        List<? extends Player> protectionCandidates = nightState.getLivePlayersKnownToTeam(this.team).findAll{
+            it != this && it.identity == Identity.VILLAGER
+        }
+        Player protectedPlayer = Utilities.pickRandomElement(protectionCandidates)
+        if (nightState.removeKill(protectedPlayer)) {
+            savedPlayers.add(protectedPlayer)
+        }
     }
 
     @Override
     Integer getNightOrder() {
-        return 0
+        return 15
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (savedPlayers.size() > 0) {
+            stats.add("Bodyguard - Players Saved", Statistic.AggregateType.AVERAGE, savedPlayers.size())
+            savedPlayers.each { Player player ->
+                stats.add("Bodyguard - Saved ${player.name}", Statistic.AggregateType.PERCENTAGE, 1)
+            }
+        }
     }
 }

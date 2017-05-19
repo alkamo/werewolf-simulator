@@ -17,24 +17,38 @@
 package ww.Roles
 
 import ww.Actors.NightActive
+import ww.Actors.Player
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.NightState
-import ww.Actors.NotYetImplementedPlayer
+import ww.Statistic
+import ww.StatisticCollector
 
-class OldMan extends NotYetImplementedPlayer implements NightActive {
+class OldMan extends Player implements NightActive, ProvidesStats {
 
     OldMan() {
         super()
         this.weight = 0
         this.name = 'Old Man';
+        this.namePlural = 'Old Men';
     }
 
     @Override
     void nightAction(NightState nightState) {
-
+        if (nightState.players.findAll{it instanceof Werewolf}.size() == nightState.nightNumber) {
+            nightState.addPlayerKill(this, this)
+        }
     }
 
     @Override
     Integer getNightOrder() {
         return 12
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (this.killedByPlayer == this) {
+            stats.add('Old Man - Died of old age', Statistic.AggregateType.PERCENTAGE, 1)
+        }
     }
 }

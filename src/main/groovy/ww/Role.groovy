@@ -35,7 +35,7 @@ enum Role {
     CUPID(Cupid.class),
     DIRE_WOLF(DireWolf.class),
     DISEASED(Diseased.class),
-    DR_BOOM(DrBoom.class),
+    MAD_BOMBER(MadBomber.class),
     HUNTER(Hunter.class),
     LYCAN(Lycan.class),
     MARTYR(Martyr.class),

@@ -18,11 +18,17 @@ package ww.Roles
 
 import ww.*
 import ww.Actors.NightActive
-import ww.Actors.NotYetImplementedPlayer
+import ww.Actors.Player
+import ww.Actors.ProvidesStats
+import ww.Actors.WinCondition
 import ww.States.GameState
 import ww.States.NightState
 
-class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightActive {
+class Chupacabra extends Player implements WinCondition, NightActive, ProvidesStats {
+
+    List<? extends Player> attemptedKills = []
+    Boolean noWerewolves = false
+    Integer playersKilled = 0
 
     Chupacabra() {
         super()
@@ -33,6 +39,38 @@ class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightA
 
     @Override
     void nightAction(NightState nightState) {
+        if (nightState.getLivePlayersWithIdentity(Identity.WEREWOLF).size() == 0) {
+            noWerewolves = true
+            attemptedKills.clear()
+        }
+
+        List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(TeamType.VILLAGE).findAll {
+            Player player ->
+                (player.identity == Identity.WEREWOLF
+                        && !nightState.playersToBeKilled.contains(player))
+        }
+        if (potentialKills.size() == 0) {
+            potentialKills = nightState.getLivePlayersUnknownToTeam(TeamType.VILLAGE).findAll {
+                Player player ->
+                    (!nightState.playersToBeKilled.contains(player)
+                            && player != this
+                            && !attemptedKills.contains(player))
+            }
+        }
+        if (potentialKills.size() == 0) {
+            potentialKills = nightState.getLivePlayers().findAll {
+                Player player -> player != this && !attemptedKills.contains(player)
+            }
+        }
+        if (potentialKills.size() != 0) {
+            Player killPick = Utilities.pickRandomElement(potentialKills)
+            if (killPick.identity == Identity.WEREWOLF
+                    || noWerewolves) {
+                nightState.addPlayerKill(killPick, this)
+                playersKilled += 1
+            }
+            attemptedKills.add(killPick)
+        }
 
     }
 
@@ -43,11 +81,13 @@ class Chupacabra extends NotYetImplementedPlayer implements WinCondition, NightA
 
     @Override
     Boolean checkForWin(GameState gameState) {
-        return (alive && gameState.players.findAll { alive }.size() == 1)
+        return (alive && gameState.getLivePlayers().size() == 1)
     }
 
     @Override
-    void updateStats(Map<String, Statistic> stats, GameState gameState) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        stats.add('Chupacabra - Kills', [Statistic.AggregateType.AVERAGE,
+                                         Statistic.AggregateType.MAX,
+                                         Statistic.AggregateType.MIN], playersKilled)
     }
 }

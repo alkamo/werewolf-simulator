@@ -19,10 +19,13 @@ package ww.Roles
 import ww.Actors.DeathActive
 import ww.Actors.Player
 import ww.Identity
+import ww.Actors.ProvidesStats
 import ww.States.GameState
+import ww.Statistic
+import ww.StatisticCollector
 import ww.Utilities
 
-class Hunter extends Player implements DeathActive {
+class Hunter extends Player implements DeathActive, ProvidesStats {
 
     Hunter() {
         super()
@@ -43,6 +46,14 @@ class Hunter extends Player implements DeathActive {
         }
         if (potentialKills.size() > 0) {
             gameState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
+        }
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        Player killedPlayer = gameState.players.find{it.killedByPlayer == this}
+        if (killedPlayer != null) {
+            stats.add("Hunter - Killed ${killedPlayer.name}", Statistic.AggregateType.PERCENTAGE, 1)
         }
     }
 }

@@ -25,5 +25,6 @@ class WolfMan extends Werewolf {
         this.identity = Identity.VILLAGER
         this.weight = -9
         this.name = 'Wolf-Man';
+        this.namePlural = 'Wolf-Men';
     }
 }

@@ -35,27 +35,4 @@ class Utilities {
         }
         return pick
     }
-
-    public static
-    final void addStatIfMissing(Map<String, Statistic> stats, String statName, List<Statistic.AggregateType> aggregateTypes, Integer value) {
-        addStatIfMissing(stats, statName, aggregateTypes, 2, RoundingMode.HALF_UP, value)
-    }
-
-    public static final void addStatIfMissing(Map<String, Statistic> stats,
-                                              String statName,
-                                              List<Statistic.AggregateType> aggregateTypes,
-                                              Integer scale,
-                                              RoundingMode roundingMode,
-                                              Integer value) {
-        if (!stats.keySet().contains(statName)) {
-            stats[statName] = new Statistic(aggregateTypes, scale, roundingMode, statName)
-        }
-        stats[statName].values.add(value)
-    }
-
-    public static final void updateWinnerStats(String winnerName, Map<String, Statistic> stats, Boolean won) {
-        if (won) {
-            addStatIfMissing(stats, "${winnerName} Won".toString(), [Statistic.AggregateType.PERCENTAGE], 1)
-        }
-    }
 }

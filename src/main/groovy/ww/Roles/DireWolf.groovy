@@ -18,15 +18,19 @@ package ww.Roles
 
 import ww.*
 import ww.Actors.Player
+import ww.Actors.ProvidesStats
 import ww.Actors.SetupActive
+import ww.States.GameState
 import ww.States.SetupState
 
-class DireWolf extends Werewolf implements SetupActive {
+class DireWolf extends Werewolf implements SetupActive, ProvidesStats {
+    Player companion
 
     DireWolf() {
         super()
         this.weight = -4
         this.name = 'Dire Wolf';
+        this.namePlural = 'Dire Wolves';
     }
 
     @Override
@@ -36,7 +40,14 @@ class DireWolf extends Werewolf implements SetupActive {
                 (player != this
                         && player.identity != Identity.WEREWOLF)
         }
-        Player companion = (Player) Utilities.pickRandomElement(potentialCompanion)
-        companion.deathLinks.add(this)
+        companion = (Player) Utilities.pickRandomElement(potentialCompanion)
+        setupState.addOneWayDeathLink(companion, this, this)
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (this.killedByPlayer == this) {
+            stats.add('Dire Wolf - Companion Killed', [Statistic.AggregateType.PERCENTAGE], 1)
+        }
     }
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
 
 import ww.States.GameState
 
-interface ProvidesStats {
-    void updateStats(Map<String, Statistic> stats, GameState gameState)
+interface WinCondition {
+    abstract Boolean checkForWin(GameState gameState)
 }

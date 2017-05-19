@@ -22,7 +22,6 @@ import ww.Actors.SetupActive
 
 
 class SetupState extends GameState {
-    Integer lynches = 1
     RoleSet roleSet
 
     SetupState(Integer cycleNumber, Parameters parameters, RoleSet roleSet) {
@@ -34,7 +33,7 @@ class SetupState extends GameState {
 
     @Override
     NightState getNextState() {
-        return new NightState(0, parameters, players, teams)
+        return new NightState(this)
     }
 
     @Override

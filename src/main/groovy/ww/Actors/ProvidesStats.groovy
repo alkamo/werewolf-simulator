@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package ww
+package ww.Actors
 
 import ww.States.GameState
+import ww.StatisticCollector
 
-interface WinCondition extends ProvidesStats {
-    abstract Boolean checkForWin(GameState gameState)
+interface ProvidesStats {
+    void updateStats(StatisticCollector stats, GameState gameState)
 }

@@ -19,36 +19,49 @@ package ww.Roles
 import ww.*
 import ww.Actors.NightActive
 import ww.Actors.Player
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.NightState
 
-class Huntress extends Player implements NightActive {
+class Huntress extends Player implements NightActive, ProvidesStats {
+    Player killedPlayer
 
     Boolean shotUsed = false
 
     Huntress() {
         super()
         this.weight = 3
+        this.namePlural = 'Huntresses';
     }
 
     @Override
     void nightAction(NightState nightState) {
         if (!shotUsed && alive) {
-            List<? extends Player> potentialKills = players.findAll {
-                Player player ->
-                    alive && identityKnownBy.contains(this) && getIdentity() == Identity.WEREWOLF
+            List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this.team).findAll {
+                Player player -> player.getIdentity() == Identity.WEREWOLF && player != this
             }
             if (potentialKills.size() == 0 && new Random().nextInt(2)) {
-                potentialKills = players.findAll {
-                    Player player ->
-                        alive && !identityKnownBy.contains(this) && player != this
+                potentialKills = nightState.getLivePlayersUnknownToTeam(this.team).findAll {
+                    Player player -> player != this
                 }
             }
-            nightState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
+            if (potentialKills.size() > 0) {
+                killedPlayer = (Player) Utilities.pickRandomElement(potentialKills)
+                nightState.addPlayerKill((Player) killedPlayer, this)
+                shotUsed = true
+            }
         }
     }
 
     @Override
     Integer getNightOrder() {
         return 5
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (killedPlayer != null) {
+            stats.add("Huntress - Killed ${killedPlayer.name}", Statistic.AggregateType.PERCENTAGE, 1)
+        }
     }
 }

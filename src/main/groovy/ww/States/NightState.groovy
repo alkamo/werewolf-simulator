@@ -26,6 +26,11 @@ import ww.TeamType
 class NightState extends GameState {
     Integer werewolfKills = 1
 
+    NightState(GameState gameState) {
+        super(gameState)
+        this.turnType = TurnType.NIGHT
+    }
+
     NightState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         super(cycleNumber, parameters, players, teams)
         this.turnType = TurnType.NIGHT
@@ -33,7 +38,7 @@ class NightState extends GameState {
 
     @Override
     DayState getNextState() {
-        return new DayState(cycleNumber + 1, parameters, players, teams)
+        return new DayState(this)
     }
 
     @Override
@@ -44,7 +49,7 @@ class NightState extends GameState {
         nightActors.addAll((List<? extends NightActive>) teams
                 .values()
                 .findAll { it instanceof NightActive })
-        nightActors.each { player ->
+        nightActors.sort{it.getNightOrder()}.each { player ->
             player.nightAction(this)
         }
         killSelectedPlayers()

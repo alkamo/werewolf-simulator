@@ -55,21 +55,17 @@ class Simulator {
         }
 
         List<Game> games = []
-        Map<String, Statistic> stats = [:]
+        StatisticCollector stats = new StatisticCollector()
         iterations.times {
             Parameters parameters = new Parameters()
             Game game = new Game(parameters, roleSet)
-            game.play(stats)
+            game.play()
             games.add(game)
+            stats.collectStats(game)
         }
         System.out.println(roleSet.name)
         System.out.println('------------------------')
-        stats.sort{e1, e2 -> e1.key <=> e2.key}.each { String key, Statistic value ->
-            value.getFormattedFinalValues(iterations).each {
-                System.out.println(it)
-            }
-
-        }
+        stats.print(iterations)
         System.out.println('------------------------')
     }
 }

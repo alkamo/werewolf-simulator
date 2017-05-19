@@ -18,6 +18,7 @@ package ww.Teams
 
 import ww.*
 import ww.Actors.Team
+import ww.Actors.WinCondition
 import ww.States.GameState
 
 class Village extends Team implements WinCondition {
@@ -30,10 +31,5 @@ class Village extends Team implements WinCondition {
     Boolean checkForWin(GameState gameState) {
         return (gameState.players.findAll { it.preventsVillageWin && it.alive }.size() == 0
                 && gameState.getLivePlayersOnTeam(this).size() > 0)
-    }
-
-    @Override
-    void updateStats(Map<String, Statistic> stats, GameState gameState) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
     }
 }

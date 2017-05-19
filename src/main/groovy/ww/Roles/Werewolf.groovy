@@ -28,5 +28,6 @@ class Werewolf extends Player {
         this.identity = Identity.WEREWOLF
         this.weight = -6
         this.preventsVillageWin = true
+        this.namePlural = 'Werewolves';
     }
 }

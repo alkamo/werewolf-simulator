@@ -16,9 +16,13 @@
 
 package ww.Roles
 
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.NightState
+import ww.Statistic
+import ww.StatisticCollector
 
-class ApprenticeSeer extends Seer {
+class ApprenticeSeer extends Seer implements ProvidesStats {
     Boolean active = false
 
     ApprenticeSeer() {
@@ -37,5 +41,12 @@ class ApprenticeSeer extends Seer {
     @Override
     Integer getNightOrder() {
         return 4
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (this.active) {
+            stats.add('Apprentice Seer - Promoted', [Statistic.AggregateType.SUM, Statistic.AggregateType.PERCENTAGE], 1)
+        }
     }
 }

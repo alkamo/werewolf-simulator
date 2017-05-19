@@ -16,12 +16,8 @@
 
 package ww
 
-import ww.Actors.Player
-import ww.Actors.Team
 import ww.States.GameState
 import ww.States.SetupState
-
-import java.math.RoundingMode
 
 class Game {
     private Parameters parameters
@@ -33,14 +29,13 @@ class Game {
         this.roleSet = roleSet
     }
 
-    void play(Map<String, Statistic> stats) {
+    void play() {
         currentState = new SetupState(0, parameters, this.roleSet)
         currentState.execute()
         while (!currentState.hasSomeoneWon()) {
             currentState = currentState.getNextState()
             currentState.execute()
         }
-        currentState.updateStats(stats)
     }
 
 

@@ -18,10 +18,16 @@ package ww.Roles
 
 import ww.Actors.Player
 import ww.Actors.SetupActive
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.SetupState
+import ww.Statistic
+import ww.StatisticCollector
 import ww.Utilities
 
-class VirginiaWoolf extends Player implements SetupActive {
+class VirginiaWoolf extends Player implements SetupActive, ProvidesStats {
+
+    Player afraidPlayer
 
     VirginiaWoolf() {
         super()
@@ -32,8 +38,15 @@ class VirginiaWoolf extends Player implements SetupActive {
     @Override
     void onGameSetup(SetupState setupState) {
         List<? extends Player> potentialAfraid = setupState.getOtherLivePlayers(this)
-        Player afraid = (Player) Utilities.pickRandomElement(potentialAfraid)
-        afraid.deathLinks.add(this)
-        this.deathLinks.add(afraid)
+        afraidPlayer = (Player) Utilities.pickRandomElement(potentialAfraid)
+        setupState.addOneWayDeathLink(this, afraidPlayer, this)
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (this.afraidPlayer.killedByPlayer == this) {
+            stats.add("Virginia Woolf - Killed", [Statistic.AggregateType.PERCENTAGE], 1)
+            stats.add("Virginia Woolf - Killed ${afraidPlayer.name}", [Statistic.AggregateType.PERCENTAGE], 1)
+        }
     }
 }

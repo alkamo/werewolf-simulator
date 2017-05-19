@@ -18,6 +18,7 @@ package ww.Roles
 
 import ww.*
 import ww.Actors.Player
+import ww.Actors.WinCondition
 import ww.States.GameState
 
 class Tanner extends Player implements WinCondition {
@@ -31,10 +32,5 @@ class Tanner extends Player implements WinCondition {
     @Override
     Boolean checkForWin(GameState gameState) {
         return !alive
-    }
-
-    @Override
-    void updateStats(Map<String, Statistic> stats, GameState gameState) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
     }
 }

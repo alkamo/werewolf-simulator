@@ -28,7 +28,7 @@ class Sorceress extends Player implements NightActive {
         this.teamType = TeamType.WEREWOLF
         this.identity = Identity.VILLAGER
         this.weight = -3
-        this.preventsVillageWin = true
+        this.namePlural = 'Sorceresses';
     }
 
     @Override

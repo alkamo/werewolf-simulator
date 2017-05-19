@@ -20,6 +20,7 @@ import ww.*
 import ww.Actors.NightActive
 import ww.Actors.NotYetImplementedPlayer
 import ww.Actors.Player
+import ww.Actors.WinCondition
 import ww.States.GameState
 import ww.States.NightState
 
@@ -46,11 +47,6 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
 
     @Override
     Boolean checkForWin(GameState gameState) {
-        return gameState.players.findAll { alive }.size() == blob.findAll { alive }.size()
-    }
-
-    @Override
-    void updateStats(Map<String, Statistic> stats, GameState gameState) {
-        Utilities.updateWinnerStats(this.name,stats,checkForWin(gameState))
+        return gameState.getLivePlayers().size() == blob.findAll { it.alive }.size()
     }
 }

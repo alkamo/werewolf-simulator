@@ -18,10 +18,16 @@ package ww.Roles
 
 import ww.Actors.Player
 import ww.Actors.SetupActive
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.SetupState
+import ww.Statistic
+import ww.StatisticCollector
 import ww.Utilities
 
-class Cupid extends Player implements SetupActive {
+class Cupid extends Player implements SetupActive, ProvidesStats {
+    Player lover1
+    Player lover2
 
     Cupid() {
         super()
@@ -31,10 +37,22 @@ class Cupid extends Player implements SetupActive {
     @Override
     void onGameSetup(SetupState setupState) {
         List<? extends Player> potentialLovers = setupState.getOtherLivePlayers(this)
-        Player lover1 = (Player) Utilities.pickRandomElement(potentialLovers)
+        lover1 = (Player) Utilities.pickRandomElement(potentialLovers)
         potentialLovers.remove(lover1)
-        Player lover2 = (Player) Utilities.pickRandomElement(potentialLovers)
-        lover1.deathLinks.add(lover2)
-        lover2.deathLinks.add(lover1)
+        lover2 = (Player) Utilities.pickRandomElement(potentialLovers)
+        setupState.addTwoWayDeathLink(lover1, lover2, this)
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (lover1.class == lover2.class) {
+            stats.add( "Cupid - Both lovers were ${lover1.namePlural}", Statistic.AggregateType.PERCENTAGE, 1)
+        } else {
+            stats.add("Cupid - ${lover1.name} was a lover", Statistic.AggregateType.PERCENTAGE, 1)
+            stats.add("Cupid - ${lover2.name} was a lover", Statistic.AggregateType.PERCENTAGE, 1)
+        }
+        if (lover1.team != lover2.team) {
+            stats.add("Cupid - Star-crossed lovers", Statistic.AggregateType.PERCENTAGE, 1)
+        }
     }
 }

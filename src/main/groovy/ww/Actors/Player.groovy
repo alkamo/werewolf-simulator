@@ -30,6 +30,9 @@ abstract class Player {
     List<? extends Player> deathLinks = []
     Team team
     String name
+    String namePlural
+    Player killedByPlayer
+    Team killedByTeam
 
     Identity identity = Identity.VILLAGER;
     Integer weight = 1;
@@ -38,6 +41,21 @@ abstract class Player {
 
     Player() {
         this.name = this.getClass().getSimpleName()
+        this.namePlural = "${this.name}s"
+    }
+
+    void kill(GameState gameState, Team killedBy) {
+        if (alive) {
+            killedByTeam = killedBy
+            kill(gameState)
+        }
+    }
+
+    void kill(GameState gameState, Player killedBy) {
+        if (alive) {
+            killedByPlayer = killedBy
+            kill(gameState)
+        }
     }
 
     void kill(GameState gameState) {

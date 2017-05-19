@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package ww.Roles
+package ww
 
-import ww.Actors.DeathActive
+import ww.Actors.Player
 import ww.States.GameState
-import ww.Actors.NotYetImplementedPlayer
 
-class DrBoom extends NotYetImplementedPlayer implements DeathActive {
 
-    DrBoom() {
-        super()
-        this.weight = -2
-        this.name = 'Dr. Boom';
+class DeathLink {
+    Player drivingPlayer
+    Player affectedPlayer
+    Player linkedBy
+
+    DeathLink(Player drivingPlayer, Player affectedPlayer, Player linkedBy) {
+        this.drivingPlayer = drivingPlayer
+        this.affectedPlayer = affectedPlayer
+        this.linkedBy = linkedBy
     }
 
-    @Override
-    void onDeath(GameState gameState) {
-
+    void evaluateLink(GameState gameState) {
+        if (!drivingPlayer.alive && affectedPlayer.alive) {
+            affectedPlayer.kill(gameState, linkedBy)
+        }
     }
 }

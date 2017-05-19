@@ -17,16 +17,21 @@
 package ww.States
 
 import ww.Actors.DayActive
-import ww.Identity
-import ww.Parameters
 import ww.Actors.Player
 import ww.Actors.Team
+import ww.Identity
+import ww.Parameters
+import ww.Roles.Seer
 import ww.TeamType
 import ww.Utilities
 
-
 class DayState extends GameState {
     Integer lynches = 1
+
+    DayState(GameState gameState) {
+        super(gameState)
+        this.turnType = TurnType.DAY
+    }
 
     DayState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         super(cycleNumber, parameters, players, teams)
@@ -35,19 +40,19 @@ class DayState extends GameState {
 
     @Override
     NightState getNextState() {
-        return new NightState(cycleNumber, parameters, players, teams)
+        return new NightState(this)
     }
 
     @Override
     void execute() {
-        lynch()
+        lynches.times { lynch() }
         List<? extends DayActive> dayActors = []
         dayActors.addAll((List<? extends DayActive>) players
                 .findAll { it.alive && it instanceof DayActive })
         dayActors.addAll((List<? extends DayActive>) teams
                 .values()
                 .findAll { it instanceof DayActive })
-        dayActors.each { player ->
+        dayActors.sort{it.dayOrder}.each { player ->
             player.dayAction(this)
         }
         killSelectedPlayers()
@@ -63,16 +68,16 @@ class DayState extends GameState {
             if (this.dayNumber != 1 || parameters.firstDayLynch) {
                 if (getLivePlayersOnTeam(teams[TeamType.VILLAGE]).size()
                         > getLivePlayersOnTeam(teams[TeamType.WEREWOLF]).size()) {
-                    lynchWerewolf()
+                    villagersLynch()
                 } else if (getLivePlayersOnTeam(teams[TeamType.WEREWOLF]).size()
                         > getLivePlayersOnTeam(teams[TeamType.VILLAGE]).size()) {
-                    lynchVillager()
+                    werewolvesLynch()
                 }
             }
         }
     }
 
-    void lynchWerewolf() {
+    void villagersLynch() {
         List<? extends Player> potentialKills = getLivePlayersKnownToTeam(teams[TeamType.VILLAGE]).findAll {
             Player player ->
                 (player.identity == Identity.WEREWOLF
@@ -84,11 +89,18 @@ class DayState extends GameState {
                     !playersToBeKilled.contains(player)
             }
         }
-        addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
-                teams[TeamType.VILLAGE])
+        if (potentialKills.size() == 0) {
+            potentialKills = getLivePlayers().findAll {
+                Player player -> !(player instanceof Seer)
+            }
+        }
+        if (potentialKills.size() != 0) {
+            addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
+                    teams[TeamType.VILLAGE])
+        }
     }
 
-    void lynchVillager() {
+    void werewolvesLynch() {
         List<? extends Player> potentialKills = getLivePlayersKnownToTeam(teams[TeamType.WEREWOLF])
         if (potentialKills.size() == 0) {
             potentialKills = players.findAll {
@@ -98,7 +110,9 @@ class DayState extends GameState {
                             && !playersToBeKilled.contains(player))
             }
         }
-        addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
-                teams[TeamType.VILLAGE])
+        if (potentialKills.size() != 0) {
+            addTeamKill((Player) Utilities.pickRandomElement(potentialKills),
+                    teams[TeamType.VILLAGE])
+        }
     }
 }

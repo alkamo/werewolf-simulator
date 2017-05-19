@@ -27,6 +27,7 @@ class BigBadWolf extends NotYetImplementedPlayer implements NightActive {
         super()
         this.weight = -9
         this.name = 'Big Bad Wolf';
+        this.namePlural = 'Big Bad Wolves';
     }
 
     @Override

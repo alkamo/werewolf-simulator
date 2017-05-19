@@ -18,63 +18,61 @@ package ww.Roles
 
 import ww.*
 import ww.Actors.NightActive
-import ww.Actors.NotYetImplementedPlayer
 import ww.Actors.Player
+import ww.Actors.ProvidesStats
+import ww.States.GameState
 import ww.States.NightState
 
-class Witch extends NotYetImplementedPlayer implements NightActive {
+class Witch extends Player implements NightActive, ProvidesStats {
     Boolean usedHeal = false
     Boolean usedKill = false
+    Player healedPlayer
+    Player killedPlayer
 
     Witch() {
         super()
         this.weight = 4
-        this.nightOrder
-    }
-
-    void useKillPotion(NightState nightState) {
-        if (!this.usedKill) {
-            List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this.team).findAll {
-                Player player ->
-                    player.identity == Identity.WEREWOLF
-            }
-            if (potentialKills.size() == 0) {
-                potentialKills = nightState.getOtherLivePlayers(this)
-            }
-            nightState.addPlayerKill((Player) Utilities.pickRandomElement(potentialKills), this)
-            this.usedKill = true
-        }
+        this.namePlural = 'Witches';
     }
 
     void useKillPotionOptionally(NightState nightState) {
-        if (new Random().nextInt(2) || null != nightState.playersToBeKilled.find {
-            it.killedByTeam.teamType == TeamType.WEREWOLF && it.playerToBeKilled == this
-        }) {
-            this.useKillPotion(nightState)
-        }
-    }
-
-    void useSavePotion(NightState nightState, Player player) {
-        if (!this.usedHeal && null != player) {
-            nightState.removeKill(player)
-            this.usedHeal = true
+        if (!this.usedKill) {
+            if (new Random().nextInt(2)
+                    || nightState.playersToBeKilled.find {
+                (it.killedByTeam != null
+                        && it.killedByTeam.teamType == TeamType.WEREWOLF
+                        && it.playerToBeKilled == this) != null
+            }) {
+                List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this.team).findAll {
+                    Player player ->
+                        player.identity == Identity.WEREWOLF
+                }
+                if (potentialKills.size() == 0) {
+                    potentialKills = nightState.getOtherLivePlayers(this)
+                }
+                killedPlayer = (Player) Utilities.pickRandomElement(potentialKills)
+                nightState.addPlayerKill(killedPlayer, this)
+                this.usedKill = true
+            }
         }
     }
 
     void useSavePotionOptionally(NightState nightState) {
-        Player saveChoice
-        if (null != nightState.playersToBeKilled.find {
-            it.killedByTeam.teamType == TeamType.WEREWOLF && it.playerToBeKilled == this
-        }) {
-            saveChoice = this
-        } else if (new Random().nextInt(2)) {
-            List<KillChoice> savablePlayers = nightState.playersToBeKilled.findAll {
-                (it.killedByTeam.teamType == TeamType.WEREWOLF)
+        if (!this.usedHeal) {
+            KillChoice saveChoice = nightState.playersToBeKilled.find {
+                it.killedByTeam != null && it.killedByTeam.teamType == TeamType.WEREWOLF && it.playerToBeKilled == this
             }
-            saveChoice = (Player) Utilities.pickRandomElement(savablePlayers).playerToBeKilled
-        }
-        if (null != saveChoice) {
-            this.useSavePotion(nightState, saveChoice)
+            if (saveChoice == null && new Random().nextInt(2)) {
+                List<KillChoice> savablePlayers = nightState.playersToBeKilled.findAll {
+                    (it.killedByTeam != null && it.killedByTeam.teamType == TeamType.WEREWOLF)
+                }
+                saveChoice = (KillChoice) Utilities.pickRandomElement(savablePlayers)
+            }
+            if (saveChoice != null) {
+                healedPlayer = saveChoice.playerToBeKilled
+                nightState.removeKill(healedPlayer)
+                this.usedHeal = true
+            }
         }
     }
 
@@ -86,6 +84,17 @@ class Witch extends NotYetImplementedPlayer implements NightActive {
 
     @Override
     Integer getNightOrder() {
-        return 2
+        return 3
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (healedPlayer != null) {
+            stats.add("Witch - Healed ${healedPlayer.name}", Statistic.AggregateType.PERCENTAGE, 1)
+        }
+        if (killedPlayer != null) {
+            stats.add("Witch - Killed ${killedPlayer.name}", Statistic.AggregateType.PERCENTAGE, 1)
+        }
+
     }
 }

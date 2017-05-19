@@ -39,7 +39,9 @@ class Seer extends Player implements NightActive, DeathActive {
                     Player player ->
                         !player.identityKnownBy.contains(this)
                 }
-                Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
+                if (potentialLooks.size() > 0) {
+                    Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
+                }
                 break;
             default:
                 throw new Exception('Not yet implemeted')

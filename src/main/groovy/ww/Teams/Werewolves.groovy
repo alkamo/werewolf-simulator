@@ -20,8 +20,10 @@ import ww.*
 import ww.Actors.NightActive
 import ww.Actors.Player
 import ww.Actors.Team
+import ww.Actors.WinCondition
 import ww.Roles.ApprenticeSeer
 import ww.Roles.Seer
+import ww.Roles.Werewolf
 import ww.States.GameState
 import ww.States.NightState
 
@@ -33,15 +35,19 @@ class Werewolves extends Team implements WinCondition, NightActive {
 
     @Override
     void nightAction(NightState nightState) {
-        if (nightState.nightNumber > 0) {
-            List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this).findAll {
-                Player player ->
-                    (player instanceof Seer || (player instanceof ApprenticeSeer && player.active))
+        if (nightState.getLivePlayers().findAll{it instanceof Werewolf}.size() > 0 ) {
+            if (nightState.nightNumber > 0) {
+                List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this).findAll {
+                    Player player ->
+                        (player instanceof Seer || (player instanceof ApprenticeSeer && player.active))
+                }
+                if (potentialKills.size() == 0) {
+                    potentialKills = nightState.getLivePlayersNotOnTeam(this)
+                }
+                if (potentialKills.size() != 0) {
+                    nightState.addTeamKill((Player) Utilities.pickRandomElement(potentialKills), this)
+                }
             }
-            if (potentialKills.size() == 0) {
-                potentialKills = nightState.getLivePlayersNotOnTeam(this)
-            }
-            nightState.addTeamKill((Player) Utilities.pickRandomElement(potentialKills), this)
         }
     }
 
@@ -52,17 +58,9 @@ class Werewolves extends Team implements WinCondition, NightActive {
 
     @Override
     Boolean checkForWin(GameState gameState) {
-        Boolean won
-        if (parameters.endGameAtParity) {
-            won = (gameState.getLivePlayersOnTeam(this).size() == gameState.getLivePlayersNotOnTeam(this).size())
-        } else {
-            won = (gameState.getLivePlayersNotOnTeam(this).size() == 0)
-        }
+        Boolean won = (parameters.endGameAtParity
+                && gameState.getLivePlayersOnTeam(this).size() >= gameState.getLivePlayersNotOnTeam(this).size())
+        won = won || gameState.getLivePlayersNotOnTeam(this).size() == 0
         return won
-    }
-
-    @Override
-    void updateStats(Map<String, Statistic> stats, GameState gameState) {
-        Utilities.updateWinnerStats(this.name, stats, checkForWin(gameState))
     }
 }

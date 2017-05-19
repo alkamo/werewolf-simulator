@@ -25,7 +25,7 @@ class Parameters {
         SHORT_SIDE
     }
 
-    Boolean seerClearsIfUnbrokenPath = true
+    Boolean shareKnowledgeIfUnbrokenPathToSeer = true
     Boolean firstDayLynch = true
     SeerClearPattern seerClearPattern = SeerClearPattern.RANDOM
     Integer lynchThreshold = 0
@@ -34,11 +34,7 @@ class Parameters {
     Boolean witchSeesVictimAfterSave = false
     Boolean endGameAtParity = true
 
-    Map<Role, Integer> roles = [(Role.VILLAGER): 6,
-                                (Role.WEREWOLF): 1]
-
     void loadFromProperties(Properties properties) {
-        roles.clear()
         this.firstDayLynch = properties.firstDayLynch?:firstDayLynch
         this.endGameAtParity = properties.endGameAtParity?:endGameAtParity
         properties.propertyNames().findAll{it}

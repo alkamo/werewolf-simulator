@@ -16,18 +16,10 @@
 
 package ww.States
 
-import ww.KillChoice
-import ww.Parameters
+import ww.*
 import ww.Actors.Player
 import ww.Actors.Team
-import ww.ProvidesStats
-import ww.Statistic
-import ww.TeamType
-import ww.Utilities
-import ww.WinCondition
-
-import java.math.RoundingMode
-
+import ww.Actors.WinCondition
 
 abstract class GameState {
     LinkedList<KillChoice> playersToBeKilled = new LinkedList()
@@ -36,6 +28,7 @@ abstract class GameState {
     TurnType turnType
     List<? extends Player> players
     Map<TeamType, ? extends Team> teams
+    List<DeathLink> deathLinks = []
 
     enum TurnType {
         SETUP,
@@ -48,6 +41,14 @@ abstract class GameState {
         this.parameters = parameters
         this.players = players
         this.teams = teams
+    }
+
+    GameState(GameState gameState) {
+        this.cycleNumber = gameState.cycleNumber + 1
+        this.parameters = gameState.parameters
+        this.players = gameState.players
+        this.teams = gameState.teams
+        this.deathLinks = gameState.deathLinks
     }
 
     void addTeamKill(Player player, Team killedBy) {
@@ -66,10 +67,11 @@ abstract class GameState {
         while (!playersToBeKilled.isEmpty()) {
             playersToBeKilled.remove().kill(this)
         }
+        deathLinks.each {it.evaluateLink(this)}
     }
 
-    void removeKill(Player player) {
-        playersToBeKilled.remove(playersToBeKilled.find { it.playerToBeKilled == player })
+    Boolean removeKill(Player player) {
+        return playersToBeKilled.remove(playersToBeKilled.find { it.playerToBeKilled == player })
     }
 
     abstract GameState getNextState()
@@ -87,16 +89,36 @@ abstract class GameState {
         }
     }
 
+    List<? extends Player> getLivePlayers() {
+        return players.findAll { it.alive }
+    }
+
     List<? extends Player> getOtherLivePlayers(Player player) {
         return players.findAll { it.alive && it != player }
     }
 
+    List<? extends Player> getLivePlayersOnTeam(TeamType teamType) {
+        return players.findAll { it.teamType == teamType && it.alive }
+    }
+
+    List<? extends Player> getLivePlayersNotOnTeam(TeamType teamType) {
+        return players.findAll { it.teamType != teamType && it.alive }
+    }
+
+    List<? extends Player> getLivePlayersKnownToTeam(TeamType teamType) {
+        return getLivePlayersKnownToTeam(teams[teamType])
+    }
+
+    List<? extends Player> getLivePlayersUnknownToTeam(TeamType teamType) {
+        return getLivePlayersUnknownToTeam(teams[teamType])
+    }
+
     List<? extends Player> getLivePlayersOnTeam(Team team) {
-        return players.findAll { it.teamType == team.teamType && it.alive }
+        return getLivePlayersOnTeam(team.teamType)
     }
 
     List<? extends Player> getLivePlayersNotOnTeam(Team team) {
-        return players.findAll { it.teamType != team.teamType && it.alive }
+        return getLivePlayersNotOnTeam(team.teamType)
     }
 
     List<? extends Player> getLivePlayersKnownToTeam(Team team) {
@@ -105,6 +127,10 @@ abstract class GameState {
 
     List<? extends Player> getLivePlayersUnknownToTeam(Team team) {
         return players.findAll { it.alive && !it.identityKnownByTeam.contains(team) }
+    }
+
+    List<? extends Player> getLivePlayersWithIdentity(Identity identity) {
+        return players.findAll { it.identity == identity && it.alive }
     }
 
     Boolean hasSomeoneWon() {
@@ -126,32 +152,12 @@ abstract class GameState {
         return winners
     }
 
-    void updateStats(Map<String, Statistic> stats) {
-        this.players.findAll{
-            it instanceof ProvidesStats
-        }.each{ProvidesStats it ->
-            it.updateStats(stats, this)
-        }
-        this.teams.values().findAll{
-            it instanceof ProvidesStats
-        }.each{ProvidesStats it ->
-            it.updateStats(stats, this)
-        }
-        if (whoWon().size() > 1) {
-            Utilities.addStatIfMissing(stats, "Multiple Winners", [Statistic.AggregateType.PERCENTAGE], 1)
-        }
-        if (this.turnType == GameState.TurnType.NIGHT) {
-            Utilities.addStatIfMissing(stats, "Night End", [Statistic.AggregateType.PERCENTAGE], 1)
-        } else {
-            Utilities.addStatIfMissing(stats, "Day End", [Statistic.AggregateType.PERCENTAGE], 1)
-        }
-        Utilities.addStatIfMissing(stats,
-                "Ended on Round",
-                [Statistic.AggregateType.AVERAGE,
-                 Statistic.AggregateType.MIN,
-                 Statistic.AggregateType.MAX],
-                0,
-                RoundingMode.FLOOR,
-                this.cycleNumber)
+    void addTwoWayDeathLink(Player player1, Player player2, Player linkedBy) {
+        addOneWayDeathLink(player1, player2, linkedBy)
+        addOneWayDeathLink(player2, player1, linkedBy)
+    }
+
+    void addOneWayDeathLink(Player drivingPlayer, Player affectedPlayer, Player linkedBy) {
+        deathLinks.add(new DeathLink(drivingPlayer, affectedPlayer, linkedBy))
     }
 }
