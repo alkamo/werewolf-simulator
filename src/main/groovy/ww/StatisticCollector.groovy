@@ -21,6 +21,7 @@ import ww.Actors.ProvidesStats
 import ww.Actors.Team
 import ww.Actors.WinCondition
 import ww.States.GameState
+import ww.States.NightState
 
 import java.math.RoundingMode
 
@@ -85,7 +86,7 @@ class StatisticCollector {
         if (gameState.whoWon().size() > 1) {
             add("! Winners - Multiple", [Statistic.AggregateType.PERCENTAGE], 1)
         }
-        if (gameState.turnType == GameState.TurnType.NIGHT) {
+        if (gameState instanceof NightState) {
             add("! Ended During Night", [Statistic.AggregateType.PERCENTAGE], 1)
         } else {
             add("! End During Day", [Statistic.AggregateType.PERCENTAGE], 1)

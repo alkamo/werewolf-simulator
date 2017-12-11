@@ -84,4 +84,8 @@ abstract class Player {
             }
         }
     }
+
+    String toString() {
+        return name;
+    }
 }

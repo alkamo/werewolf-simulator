@@ -16,3 +16,27 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.4.1'
 }
+
+def iterations = 1000
+def roleSet = "BASIC_14"
+
+task run(type: JavaExec) {
+    args = ["-i $iterations", "-r $roleSet"]
+    main = 'ww.Simulator'
+}
+
+task runVerbose(type: JavaExec) {
+    args = ["-i $iterations", "-r $roleSet", "-v"]
+    main = 'ww.Simulator'
+}
+
+tasks.each { task ->
+    if (task instanceof JavaExec) {
+        (JavaExec) task.with {
+            setGroup('execution')
+            setClasspath(sourceSets.main.runtimeClasspath)
+            dependsOn assemble
+            outputs.upToDateWhen { false }
+        }
+    }
+}

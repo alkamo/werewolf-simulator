@@ -30,12 +30,10 @@ class DayState extends GameState {
 
     DayState(GameState gameState) {
         super(gameState)
-        this.turnType = TurnType.DAY
     }
 
     DayState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         super(cycleNumber, parameters, players, teams)
-        this.turnType = TurnType.DAY
     }
 
     @Override
@@ -45,6 +43,7 @@ class DayState extends GameState {
 
     @Override
     void execute() {
+        parameters.logAction("Day ${this.getDayNumber()}")
         lynches.times { lynch() }
         List<? extends DayActive> dayActors = []
         dayActors.addAll((List<? extends DayActive>) players

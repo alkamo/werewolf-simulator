@@ -20,4 +20,8 @@ package ww
 enum Identity {
     VILLAGER,
     WEREWOLF
+
+    String toString() {
+        return this.name().toLowerCase()
+    }
 }

@@ -16,9 +16,6 @@
 
 package ww
 
-import java.math.RoundingMode
-
-
 class Utilities {
     public static final def pickRandomElement(List<?> listToPick) {
         Integer pickIndex
@@ -34,5 +31,18 @@ class Utilities {
             pick = listToPick.get(pickIndex)
         }
         return pick
+    }
+
+    public static final def getListOffsetWrapping(List<?> list, Object startingPoint, Integer offset) {
+        Object nextObject
+        Integer currentIndex = list.findIndexOf { it == startingPoint }
+        if (currentIndex + offset >= list.size()) {
+            nextObject = list[offset + currentIndex - list.size()]
+        } else if (currentIndex + offset < 0) {
+            nextObject = list[list.size() - currentIndex + offset]
+        } else {
+            nextObject = list[currentIndex + offset]
+        }
+        return nextObject
     }
 }

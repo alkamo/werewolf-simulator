@@ -16,7 +16,6 @@
 
 package ww.Teams
 
-import ww.*
 import ww.Actors.NightActive
 import ww.Actors.Player
 import ww.Actors.Team
@@ -26,6 +25,8 @@ import ww.Roles.Seer
 import ww.Roles.Werewolf
 import ww.States.GameState
 import ww.States.NightState
+import ww.TeamType
+import ww.Utilities
 
 class Werewolves extends Team implements WinCondition, NightActive {
     Werewolves() {
@@ -35,7 +36,9 @@ class Werewolves extends Team implements WinCondition, NightActive {
 
     @Override
     void nightAction(NightState nightState) {
-        if (nightState.getLivePlayers().findAll{it instanceof Werewolf}.size() > 0 ) {
+        if (nightState.getLivePlayers().findAll {
+            it instanceof Werewolf
+        }.size() > 0 && nightState.getNightNumber() != 1) {
             if (nightState.nightNumber > 0) {
                 List<? extends Player> potentialKills = nightState.getLivePlayersKnownToTeam(this).findAll {
                     Player player ->

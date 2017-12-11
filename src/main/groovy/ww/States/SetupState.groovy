@@ -26,7 +26,6 @@ class SetupState extends GameState {
 
     SetupState(Integer cycleNumber, Parameters parameters, RoleSet roleSet) {
         super(cycleNumber, parameters, [], [:])
-        this.turnType = TurnType.SETUP
         this.roleSet = roleSet
         this.cycleNumber = 0
     }

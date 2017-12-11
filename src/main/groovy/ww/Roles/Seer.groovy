@@ -40,7 +40,9 @@ class Seer extends Player implements NightActive, DeathActive {
                         !player.identityKnownBy.contains(this)
                 }
                 if (potentialLooks.size() > 0) {
-                    Utilities.pickRandomElement(potentialLooks).identityKnownBy.add(this)
+                    Player looksAt = Utilities.pickRandomElement(potentialLooks)
+                    looksAt.identityKnownBy.add(this)
+                    parameters.logAction("Seer identifies $looksAt as ${looksAt.getIdentity()}")
                 }
                 break;
             default:

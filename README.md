@@ -9,36 +9,36 @@ _At this time only extremely basic functionality is implemented._
 ***
 Roles Implemented:
 * Apprentice Seer
+* Blob
+* Bodyguard
+* Cult Leader
 * Cupid
+* Chupacabra
 * Dire Wolf
 * Hunter
 * Huntress
 * Lycan
+* Mad Bomber
+* Old Man
+* Prince
 * Seer
+* Sorceress
 * Tanner
 * Villager
 * Virginia Woolf
 * Werewolf
 * Witch
+* Wolf Man
 ***
 
 Roles Yet To Be Implemented:
 * Big Bad Wolf
-* Blob
-* Bodyguard
-* Chupacabra
-* Cult Leader
 * Diseased
-* Dr Boom
 * Martyr
 * Minion
-* Old Man
-* Prince
 * Revealer
-* Sorceress
 * Troublemaker
 * Wolf Cub
-* Wolf Man
 ***
 
 Roles That Will Not Be Implemented

@@ -25,16 +25,9 @@ abstract class GameState {
     LinkedList<KillChoice> playersToBeKilled = new LinkedList()
     Integer cycleNumber
     Parameters parameters
-    TurnType turnType
     List<? extends Player> players
     Map<TeamType, ? extends Team> teams
     List<DeathLink> deathLinks = []
-
-    enum TurnType {
-        SETUP,
-        DAY,
-        NIGHT
-    }
 
     GameState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         this.cycleNumber = cycleNumber
@@ -44,7 +37,7 @@ abstract class GameState {
     }
 
     GameState(GameState gameState) {
-        this.cycleNumber = gameState.cycleNumber + 1
+        this.cycleNumber = gameState.cycleNumber
         this.parameters = gameState.parameters
         this.players = gameState.players
         this.teams = gameState.teams
@@ -53,12 +46,14 @@ abstract class GameState {
 
     void addTeamKill(Player player, Team killedBy) {
         if (playersToBeKilled.findAll { it.playerToBeKilled = player }.size() == 0) {
+            parameters.logAction("$player chosen to be killed by $killedBy")
             playersToBeKilled.add(new KillChoice(player, killedBy, this))
         }
     }
 
     void addPlayerKill(Player player, Player killedBy) {
         if (playersToBeKilled.findAll { it.playerToBeKilled = player }.size() == 0) {
+            parameters.logAction("$player chosen to be killed by $killedBy")
             playersToBeKilled.add(new KillChoice(player, killedBy, this))
         }
     }
@@ -67,7 +62,7 @@ abstract class GameState {
         while (!playersToBeKilled.isEmpty()) {
             playersToBeKilled.remove().kill(this)
         }
-        deathLinks.each {it.evaluateLink(this)}
+        deathLinks.each { it.evaluateLink(this) }
     }
 
     Boolean removeKill(Player player) {
@@ -95,6 +90,10 @@ abstract class GameState {
 
     List<? extends Player> getOtherLivePlayers(Player player) {
         return players.findAll { it.alive && it != player }
+    }
+
+    List<? extends Player> getLivePlayersAndYou(Player player) {
+        return players.findAll { it.alive || it == player }
     }
 
     List<? extends Player> getLivePlayersOnTeam(TeamType teamType) {
@@ -131,6 +130,28 @@ abstract class GameState {
 
     List<? extends Player> getLivePlayersWithIdentity(Identity identity) {
         return players.findAll { it.identity == identity && it.alive }
+    }
+
+    Player getRightNeighbor(Player currentPlayer) {
+        return (Player) Utilities.getListOffsetWrapping(getLivePlayersAndYou(currentPlayer), currentPlayer, 1)
+    }
+
+    Player getLeftNeighbor(Player currentPlayer) {
+        return (Player) Utilities.getListOffsetWrapping(getLivePlayersAndYou(currentPlayer), currentPlayer, -1)
+    }
+
+    Player getOffsetLivePlayer(Player currentPlayer, Integer offset) {
+        Player nextPlayer
+        List<? extends Player> livePlayers = getLivePlayers()
+        Integer currentIndex = livePlayers.findIndexOf { it == currentPlayer }
+        if (currentIndex + offset >= livePlayers.size()) {
+            nextPlayer = livePlayers[offset + currentIndex - livePlayers.size()]
+        } else if (currentPlayer + offset < 0) {
+            nextPlayer = livePlayers[livePlayers.size() - currentIndex - offset - 1]
+        } else {
+            nextPlayer = livePlayers[currentIndex + offset]
+        }
+        return nextPlayer
     }
 
     Boolean hasSomeoneWon() {

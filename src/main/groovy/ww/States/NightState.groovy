@@ -28,12 +28,11 @@ class NightState extends GameState {
 
     NightState(GameState gameState) {
         super(gameState)
-        this.turnType = TurnType.NIGHT
+        this.cycleNumber = gameState.cycleNumber + 1
     }
 
     NightState(Integer cycleNumber, Parameters parameters, List<? extends Player> players, Map<TeamType, ? extends Team> teams) {
         super(cycleNumber, parameters, players, teams)
-        this.turnType = TurnType.NIGHT
     }
 
     @Override
@@ -43,6 +42,7 @@ class NightState extends GameState {
 
     @Override
     void execute() {
+        parameters.logAction("Night ${this.getNightNumber()}")
         List<? extends NightActive> nightActors = []
         nightActors.addAll((List<? extends NightActive>) players
                 .findAll { it.alive && it instanceof NightActive })

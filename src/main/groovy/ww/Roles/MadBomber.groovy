@@ -35,19 +35,9 @@ class MadBomber extends Player implements DeathActive, ProvidesStats {
 
     @Override
     void onDeath(GameState gameState) {
-        List<? extends Player> livePlayers = gameState.getLivePlayers()
-        Integer bomberIndex = livePlayers.findIndexOf { it == this }
-        if (this != livePlayers.first()) {
-            killedPlayer1 = livePlayers[bomberIndex - 1]
-        } else {
-            killedPlayer1 = livePlayers.last()
-        }
+        killedPlayer1 = gameState.getLeftNeighbor(this)
         gameState.addPlayerKill(killedPlayer1, this)
-        if (this != livePlayers.last()) {
-            killedPlayer2 = livePlayers[bomberIndex + 1]
-        } else {
-            killedPlayer2 = livePlayers.first()
-        }
+        killedPlayer2 = gameState.getRightNeighbor(this)
         gameState.addPlayerKill(killedPlayer2, this)
     }
 

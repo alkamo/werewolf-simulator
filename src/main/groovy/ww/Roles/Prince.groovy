@@ -17,10 +17,17 @@
 package ww.Roles
 
 import ww.Actors.DeathActive
+import ww.Actors.Player
+import ww.Actors.ProvidesStats
+import ww.Actors.Team
+import ww.States.DayState
 import ww.States.GameState
-import ww.Actors.NotYetImplementedPlayer
+import ww.Statistic
+import ww.StatisticCollector
+import ww.TeamType
 
-class Prince extends NotYetImplementedPlayer implements DeathActive {
+class Prince extends Player implements DeathActive, ProvidesStats {
+    Boolean lynchPrevented = false
 
     Prince() {
         super()
@@ -29,6 +36,22 @@ class Prince extends NotYetImplementedPlayer implements DeathActive {
 
     @Override
     void onDeath(GameState gameState) {
+        if (gameState instanceof DayState
+                && this.killedByTeam != null
+                && (this.killedByTeam == gameState.teams[TeamType.VILLAGE]
+                || this.killedByTeam == gameState.teams[TeamType.WEREWOLF])
+        ) {
+            this.alive = true
+            this.killedByTeam = null
+            this.lynchPrevented = true
+            this.identityKnownByTeam.add(gameState.teams[TeamType.VILLAGE])
+        }
+    }
 
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        if (lynchPrevented) {
+            stats.add('Prince - Lynch Prevented', Statistic.AggregateType.PERCENTAGE, 1)
+        }
     }
 }

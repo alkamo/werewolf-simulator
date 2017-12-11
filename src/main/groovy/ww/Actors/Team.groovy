@@ -38,4 +38,8 @@ abstract class Team {
             }
         }
     }
+
+    String toString() {
+        return name;
+    }
 }

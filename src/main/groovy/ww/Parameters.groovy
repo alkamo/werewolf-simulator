@@ -26,17 +26,24 @@ class Parameters {
     }
 
     Boolean shareKnowledgeIfUnbrokenPathToSeer = true
-    Boolean firstDayLynch = true
+    Boolean firstDayLynch = false
     SeerClearPattern seerClearPattern = SeerClearPattern.RANDOM
     Integer lynchThreshold = 0
     Boolean werewolvesChooseLycan = false
     Boolean werewolvesChooseMinion = false
     Boolean witchSeesVictimAfterSave = false
     Boolean endGameAtParity = true
+    Boolean verbose = false
 
     void loadFromProperties(Properties properties) {
         this.firstDayLynch = properties.firstDayLynch?:firstDayLynch
         this.endGameAtParity = properties.endGameAtParity?:endGameAtParity
         properties.propertyNames().findAll{it}
+    }
+
+    void logAction(String action){
+        if (verbose) {
+            System.out.println(action)
+        }
     }
 }

@@ -25,6 +25,12 @@ class RoleSet {
         BASIC_7(
                 [(Role.VILLAGER): 6,
                  (Role.WEREWOLF): 1]),
+        BASIC_14(
+                [(Role.VILLAGER): 12,
+                 (Role.WEREWOLF): 2]),
+        BASIC_21(
+                [(Role.VILLAGER): 18,
+                 (Role.WEREWOLF): 3]),
         STANDARD_6(
                 [(Role.VILLAGER): 4,
                  (Role.SEER)    : 1,
@@ -135,8 +141,16 @@ class RoleSet {
                 [(Role.VILLAGER) : 9,
                  (Role.BODYGUARD): 1,
                  (Role.WEREWOLF) : 2]),
+        BASIC_AND_BLOB_9(
+                [(Role.VILLAGER): 7,
+                 (Role.BLOB)    : 1,
+                 (Role.WEREWOLF): 1]),
+        BASIC_AND_PRINCE_12(
+                [(Role.VILLAGER): 9,
+                 (Role.PRINCE)  : 1,
+                 (Role.WEREWOLF): 2]),
         EVERYTHING(
-                [(Role.VILLAGER)       : 8,
+                [(Role.VILLAGER)       : 9,
                  (Role.WEREWOLF)       : 1,
                  (Role.SEER)           : 1,
                  (Role.APPRENTICE_SEER): 1,
@@ -154,7 +168,9 @@ class RoleSet {
                  (Role.OLD_MAN)        : 1,
                  (Role.VIRGINIA_WOOLF) : 1,
                  (Role.WITCH)          : 1,
-                 (Role.BODYGUARD)      : 1])
+                 (Role.BODYGUARD)      : 1,
+                 (Role.BLOB)           : 1,
+                 (Role.PRINCE)         : 1])
 
         Map<Role, Integer> roleMap
 

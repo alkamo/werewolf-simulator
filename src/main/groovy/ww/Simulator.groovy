@@ -19,12 +19,13 @@ package ww
 class Simulator {
 
     public static void main(String[] args) {
-        def cli = new CliBuilder(usage: 'Simulator.groovy -[irfph]')
+        def cli = new CliBuilder(usage: 'Simulator.groovy -[irfpvh]')
         cli.with {
             i longOpt: 'iteration', 'Number of Iterations', args: 1, required: false, type: Integer
             r longOpt: 'roleset', 'Predefined Role Set', args: 1, required: false, type: String
             f longOpt: 'rolesetfile', 'Role Set File', args: 1, required: false, type: String
             p longOpt: 'properties', 'Properties File', args: 1, required: false, type: String
+            v longOpt: 'verbose', 'Enumerate each action', args: 0, required: false, type: Boolean
             h longOpt: 'help', 'Usage', required: false
         }
         def options = cli.parse(args)
@@ -43,7 +44,10 @@ class Simulator {
         }
         RoleSet roleSet = new RoleSet(predefinedRoleSet)
 
-
+        Boolean verbose = false
+        if (options.v) {
+            verbose = true
+        }
 
         if (options.f) {
             throw new Exception('Role set files are not yet supported')
@@ -58,6 +62,9 @@ class Simulator {
         StatisticCollector stats = new StatisticCollector()
         iterations.times {
             Parameters parameters = new Parameters()
+            if (verbose) {
+                parameters.verbose = true
+            }
             Game game = new Game(parameters, roleSet)
             game.play()
             games.add(game)

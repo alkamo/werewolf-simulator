@@ -37,6 +37,4 @@ class Game {
             currentState.execute()
         }
     }
-
-
 }

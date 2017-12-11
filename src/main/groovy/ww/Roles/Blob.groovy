@@ -16,17 +16,19 @@
 
 package ww.Roles
 
-import ww.*
 import ww.Actors.NightActive
-import ww.Actors.NotYetImplementedPlayer
 import ww.Actors.Player
+import ww.Actors.ProvidesStats
 import ww.Actors.WinCondition
 import ww.States.GameState
 import ww.States.NightState
+import ww.Statistic
+import ww.StatisticCollector
+import ww.TeamType
 
-class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition {
+class Blob extends Player implements NightActive, WinCondition, ProvidesStats {
 
-    List<? extends Player> blob
+    List<? extends Player> blob = [this]
 
     Blob() {
         super()
@@ -37,7 +39,7 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
 
     @Override
     void nightAction(NightState nightState) {
-
+        blob.add(nightState.getLeftNeighbor(blob.findAll { it.alive }.last()))
     }
 
     @Override
@@ -48,5 +50,15 @@ class Blob extends NotYetImplementedPlayer implements NightActive, WinCondition 
     @Override
     Boolean checkForWin(GameState gameState) {
         return gameState.getLivePlayers().size() == blob.findAll { it.alive }.size()
+    }
+
+    @Override
+    void updateStats(StatisticCollector stats, GameState gameState) {
+        stats.add('Blob - Size',
+                [Statistic.AggregateType.MAX, Statistic.AggregateType.MIN, Statistic.AggregateType.AVERAGE],
+                blob.size())
+        stats.add('Blob - Live Size',
+                [Statistic.AggregateType.MAX, Statistic.AggregateType.MIN, Statistic.AggregateType.AVERAGE],
+                blob.findAll { it.alive }.size())
     }
 }
