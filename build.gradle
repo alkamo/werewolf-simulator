@@ -17,16 +17,17 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.4.1'
 }
 
-def iterations = 1000
-def roleSet = "BASIC_14"
+def iterations = 10000
+def threads = 7
+def roleSet = "HUNTERS_12_AND_WOLVES_6"
 
 task run(type: JavaExec) {
-    args = ["-i $iterations", "-r $roleSet"]
+    args = ["-i $iterations", "-r $roleSet", "-t $threads"]
     main = 'ww.Simulator'
 }
 
 task runVerbose(type: JavaExec) {
-    args = ["-i $iterations", "-r $roleSet", "-v"]
+    args = ["-i $iterations", "-r $roleSet", "-t $threads", "-v"]
     main = 'ww.Simulator'
 }
 

@@ -16,16 +16,24 @@
 
 package ww
 
+import ww.States.GameState
+
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+
 class Simulator {
 
     public static void main(String[] args) {
-        def cli = new CliBuilder(usage: 'Simulator.groovy -[irfpvh]')
+        def cli = new CliBuilder(usage: 'Simulator.groovy -[irfptvh]')
         cli.with {
             i longOpt: 'iteration', 'Number of Iterations', args: 1, required: false, type: Integer
             r longOpt: 'roleset', 'Predefined Role Set', args: 1, required: false, type: String
             f longOpt: 'rolesetfile', 'Role Set File', args: 1, required: false, type: String
             p longOpt: 'properties', 'Properties File', args: 1, required: false, type: String
             v longOpt: 'verbose', 'Enumerate each action', args: 0, required: false, type: Boolean
+            t longOpt: 'threads', 'Number of threads', args: 1, required: false, type: Integer
             h longOpt: 'help', 'Usage', required: false
         }
         def options = cli.parse(args)
@@ -58,21 +66,32 @@ class Simulator {
             throw new Exception('Property files are not yet supported')
         }
 
-        List<Game> games = []
-        StatisticCollector stats = new StatisticCollector()
-        iterations.times {
-            Parameters parameters = new Parameters()
-            if (verbose) {
-                parameters.verbose = true
-            }
-            Game game = new Game(parameters, roleSet)
-            game.play()
-            games.add(game)
-            stats.collectStats(game)
+        Integer threads = 1
+        if (options.t) {
+            threads = options.t.trim().toInteger()
         }
-        System.out.println(roleSet.name)
-        System.out.println('------------------------')
-        stats.print(iterations)
-        System.out.println('------------------------')
+
+        ExecutorService executor = Executors.newFixedThreadPool(threads)
+        try {
+            List<Callable<Game>> games = []
+            iterations.times { idx ->
+                Parameters parameters = new Parameters()
+                if (verbose) {
+                    parameters.verbose = true
+                }
+                Game game = new Game(parameters, roleSet)
+                games.add(game)
+            }
+            List<Future<Game>> finalGames = executor.invokeAll(games)
+
+            StatisticCollector stats = new StatisticCollector(finalGames)
+
+            System.out.println(roleSet.name)
+            System.out.println('------------------------')
+            stats.print(iterations)
+            System.out.println('------------------------')
+        } finally {
+            executor.shutdown()
+        }
     }
 }

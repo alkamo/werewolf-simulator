@@ -1,4 +1,4 @@
-**Werewolf Simulator**
+# Werewolf Simulator
 
 This is a work-in-progress application for simulating large numbers of Werewolf games using the same rules across the set of games. This may lend statistical insight to some mechanics/strategies.
 
@@ -7,7 +7,7 @@ _At this time only extremely basic functionality is implemented._
 ***
 **A note on strategy:** This simulator assumes that all players are both incredibly stupid and psychic. This does not reflect the way actual games are played terribly well. Trying to build any kind of significant strategy into a simulator of this kind tends to lead to a result that is a test of the strategy implemented, rather than the game itself.
 ***
-Roles Implemented:
+##### Roles Implemented:
 * Apprentice Seer
 * Blob
 * Bodyguard
@@ -31,7 +31,7 @@ Roles Implemented:
 * Wolf Man
 ***
 
-Roles Yet To Be Implemented:
+##### Roles Yet To Be Implemented:
 * Big Bad Wolf
 * Diseased
 * Martyr
@@ -41,49 +41,54 @@ Roles Yet To Be Implemented:
 * Wolf Cub
 ***
 
-Roles That Will Not Be Implemented
+##### Roles That Will Not Be Implemented
+###### Changing teams/roles/abilities is difficult
 * Alpha Wolf
-* Aura Seer
-* Beholder
-* Bloody Mary
-* Bogeyman
-* Count
 * Cursed
 * Doppelganger
-* Dracula
-* Dreamwolf
 * Drunk
-* Fang Face
-* Father Time
 * Frankenstein's Monster
-* Fruit Brute
-* Ghost
-* Hoodlum
-* Insomniac
-* Leprechaun
-* Lone Wolf
 * Magician
+###### Would not impact a simulation
+* Aura Seer
+* Beholder
+* Count
+* Dreamwolf
+* Fang Face
+* Ghost
+* Insomniac
 * Mason
 * Mayor
 * Mummy
-* Mystic Seer
-* Nostradamus
 * Old Hag
 * P.I.
 * Pacifist
-* Priest
-* Ralph
-* Sam
-* Sasquatch
 * Spellcaster
 * Teenage Werewolf
 * Thing
-* Time Bandit
-* Tough Guy
-* Vampire
 * Village Idiot
 * Wolverine
 * Zombie
+ ###### Post-death actions are difficult
+* Bloody Mary
+ ###### Indecision is hard to simulate
+* Bogeyman
+* Father Time
+* Ralph
+* Sam
+* Sasquatch
+* Time Bandit
+* Vampire
+ ###### Miscellaneous
+* Dracula
+* Fruit Brute
+* Hoodlum
+* Leprechaun
+* Lone Wolf
+* Mystic Seer
+* Nostradamus
+* Priest
+* Tough Guy
 ***
 
 My preferred version of Werewolf is [Bezier Games](https://beziergames.com "Bezier Games")' Ultimate Werewolf. It can be found at many retail outlets, as well as their website. 

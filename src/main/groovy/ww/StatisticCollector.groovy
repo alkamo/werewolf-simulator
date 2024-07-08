@@ -24,10 +24,17 @@ import ww.States.GameState
 import ww.States.NightState
 
 import java.math.RoundingMode
+import java.util.concurrent.Future
 
 
 class StatisticCollector {
     Map<String, Statistic> stats = [:]
+
+    StatisticCollector(List<Future<Game>> games) {
+        games.each { Future<Game> game ->
+            collectStats(game.get().currentState)
+        }
+    }
 
     void add(String statName, Statistic.AggregateType aggregateType, Integer value) {
         add(statName, [aggregateType], value)
@@ -55,10 +62,6 @@ class StatisticCollector {
         stats[statName].values.add(value)
     }
 
-    void collectStats(Game game) {
-        collectStats(game.currentState)
-    }
-
     void collectStats(GameState gameState) {
         gameState.players.findAll {
             it instanceof WinCondition && it.checkForWin(gameState)
@@ -80,7 +83,7 @@ class StatisticCollector {
         }.each { ProvidesStats it ->
             it.updateStats(this, gameState)
         }
-        add("! Game Weight", [Statistic.AggregateType.AVERAGE], 0, gameState.players.sum { it.weight })
+        add("! Game Weight", [Statistic.AggregateType.AVERAGE], 0, (Integer) gameState.players.sum { it.weight })
         add("! Players", [Statistic.AggregateType.AVERAGE], 0, gameState.players.size())
         add("! Survivors", [Statistic.AggregateType.AVERAGE], gameState.getLivePlayers().size())
         if (gameState.whoWon().size() > 1) {

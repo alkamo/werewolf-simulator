@@ -19,10 +19,17 @@ package ww
 import ww.States.GameState
 import ww.States.SetupState
 
-class Game {
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.RunnableFuture
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+
+class Game implements Callable {
     private Parameters parameters
     private RoleSet roleSet
     GameState currentState
+    Boolean finished = false
 
     Game(Parameters parameters, RoleSet roleSet) {
         this.parameters = parameters
@@ -36,5 +43,12 @@ class Game {
             currentState = currentState.getNextState()
             currentState.execute()
         }
+        finished = true;
+    }
+
+    @Override
+    Game call() throws Exception {
+        play()
+        return this
     }
 }

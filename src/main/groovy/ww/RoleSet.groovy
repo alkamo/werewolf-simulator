@@ -149,6 +149,15 @@ class RoleSet {
                 [(Role.VILLAGER): 9,
                  (Role.PRINCE)  : 1,
                  (Role.WEREWOLF): 2]),
+        HUNTERS_15_AND_WOLVES_5(
+                [(Role.HUNTER): 15,
+                 (Role.WEREWOLF): 5]),
+        HUNTERS_13_AND_WOLVES_8(
+                [(Role.HUNTER): 13,
+                 (Role.WEREWOLF): 8]),
+        HUNTERS_12_AND_WOLVES_6(
+                [(Role.HUNTER): 12,
+                 (Role.WEREWOLF): 6]),
         EVERYTHING(
                 [(Role.VILLAGER)       : 9,
                  (Role.WEREWOLF)       : 1,
